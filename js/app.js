@@ -129,7 +129,7 @@
   })();
 
   /* --------------------------------------------------------- filters UI */
-  var filters = { status: "all", type: "all", kind: "all", season: "all", tag: "all", q: "",
+  var filters = { status: "all", type: "all", kind: "all", season: "all", tags: [], q: "",
                   favOnly: false, canonOnly: false };
 
   function passesFilter(item) {
@@ -144,8 +144,11 @@
     if (filters.kind !== "all") {
       if (item.type !== "episode" || item.kind !== filters.kind) return false;
     }
-    if (filters.tag !== "all") {
-      if (item.type !== "episode" || !item.tags || item.tags.indexOf(filters.tag) === -1) return false;
+    if (filters.tags.length) {
+      // multi-select: episode must carry at least one of the selected arcs/elements (OR)
+      if (item.type !== "episode" || !item.tags) return false;
+      var hit = filters.tags.some(function (t) { return item.tags.indexOf(t) !== -1; });
+      if (!hit) return false;
     }
     if (filters.season !== "all" && String(item.season) !== filters.season) {
       // movies have no season; only show them under "all"
@@ -265,7 +268,7 @@
   function filtersActive() {
     return !!(filters.q || filters.favOnly || filters.canonOnly ||
       filters.status !== "all" || filters.type !== "all" || filters.kind !== "all" ||
-      filters.season !== "all" || filters.tag !== "all");
+      filters.season !== "all" || filters.tags.length);
   }
 
   function render() {
@@ -416,8 +419,9 @@
     if (header) header.outerHTML = seasonHeaderHtml(item.season);
   }
 
-  // filter chips
+  // single-select filter chips (status / type / kind). The tag group is multi-select (below).
   document.querySelectorAll(".chip-group").forEach(function (group) {
+    if (group.id === "filter-tag") return;
     group.addEventListener("click", function (e) {
       var chip = e.target.closest(".chip");
       if (!chip) return;
@@ -446,12 +450,24 @@
       TAGS.map(function (t) {
         return '<button class="chip chip-tag pill-' + t.key + '" data-value="' + t.key + '">' + t.label + "</button>";
       }).join("");
+    var tagAllChip = function () { return tagGroup.querySelector('.chip[data-value="all"]'); };
     tagGroup.addEventListener("click", function (e) {
       var chip = e.target.closest(".chip");
       if (!chip) return;
-      tagGroup.querySelectorAll(".chip").forEach(function (c) { c.classList.remove("is-active"); });
-      chip.classList.add("is-active");
-      filters.tag = chip.dataset.value;
+      var val = chip.dataset.value;
+      if (val === "all") {
+        filters.tags = [];
+        tagGroup.querySelectorAll(".chip").forEach(function (c) {
+          c.classList.toggle("is-active", c.dataset.value === "all");
+        });
+      } else {
+        var i = filters.tags.indexOf(val);
+        if (i === -1) filters.tags.push(val); else filters.tags.splice(i, 1);
+        chip.classList.toggle("is-active", i === -1);
+        // "الكل" is active only when nothing is selected
+        var all = tagAllChip();
+        if (all) all.classList.toggle("is-active", filters.tags.length === 0);
+      }
       render();
     });
   }
@@ -467,7 +483,7 @@
   /* ----------------------------------------- quick actions & helpers */
   // reset every filter and sync the toolbar UI back to its default state
   function resetFilters() {
-    filters = { status: "all", type: "all", kind: "all", season: "all", tag: "all", q: "",
+    filters = { status: "all", type: "all", kind: "all", season: "all", tags: [], q: "",
                 favOnly: false, canonOnly: false };
     document.querySelectorAll(".chip-group").forEach(function (group) {
       group.querySelectorAll(".chip").forEach(function (c) {
