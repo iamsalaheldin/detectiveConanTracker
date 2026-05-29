@@ -17,7 +17,9 @@
       "WebFetch(domain:www.detectiveconanworld.com)",
       "Bash(node scripts/lore.mjs)",
       "Bash(git config *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit -q -m ' *)",
+      "Bash(git checkout *)"
     ]
   }
 }

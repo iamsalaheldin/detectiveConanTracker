@@ -8,50 +8,43 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Lalezar&family=Tajawal:wght@400;500;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&family=Tajawal:wght@400;500;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <!-- decorative speed-line burst behind the header -->
-  <header class="site-header">
-    <div class="header-burst" aria-hidden="true"></div>
-    <div class="header-inner">
-      <div class="brand">
-        <span class="brand-mark" aria-hidden="true">
-          <!-- magnifying glass + bow-tie motif -->
-          <svg viewBox="0 0 64 64" width="56" height="56" role="img" aria-label="شعار">
-            <circle cx="26" cy="26" r="16" fill="none" stroke="currentColor" stroke-width="5" />
-            <circle cx="26" cy="26" r="9" fill="rgba(215,40,47,.18)" />
-            <line x1="38" y1="38" x2="56" y2="56" stroke="currentColor" stroke-width="6" stroke-linecap="round" />
-            <path class="bowtie" d="M44 12 L54 7 L54 23 L44 18 Z M44 12 L34 7 L34 23 L44 18 Z" />
-            <circle cx="44" cy="15" r="2.4" fill="#fff" />
-          </svg>
-        </span>
-        <div class="brand-text">
-          <h1>المحقق كونان</h1>
-          <p>سِجلّ مشاهدة الحلقات والأفلام</p>
-        </div>
-      </div>
-
-      <div class="header-actions">
-        <button id="btn-export" class="btn btn-ghost" type="button" title="تنزيل نسخة احتياطية من تقدّمك">⬇ تصدير</button>
-        <button id="btn-import" class="btn btn-ghost" type="button" title="استعادة تقدّمك من ملف">⬆ استيراد</button>
-        <input id="file-import" type="file" accept="application/json,.json" hidden />
-      </div>
+  <!-- top brand bar -->
+  <header class="topbar">
+    <button id="nav-toggle" class="nav-toggle" type="button" aria-label="القائمة" aria-expanded="false">☰</button>
+    <span class="brand-logo">APTX-4861 TRACKER</span>
+    <span class="brand-sub">المحقق كونان · سجلّ القضايا</span>
+    <div class="topbar-actions">
+      <button id="btn-export" class="btn btn-ghost" type="button" title="تنزيل نسخة احتياطية من تقدّمك">⬇ تصدير</button>
+      <button id="btn-import" class="btn btn-ghost" type="button" title="استعادة تقدّمك من ملف">⬆ استيراد</button>
+      <input id="file-import" type="file" accept="application/json,.json" hidden />
     </div>
-
-    <nav class="main-nav" aria-label="التنقّل">
-      <div class="main-nav-inner">
-        <button class="nav-tab is-active" data-page="tracker" type="button">🔎 الحلقات والأفلام</button>
-        <button class="nav-tab" data-page="stats" type="button">📊 إحصائياتي</button>
-        <button class="nav-tab" data-page="story" type="button">📖 القصة</button>
-        <button class="nav-tab" data-page="characters" type="button">👤 الشخصيات</button>
-        <button class="nav-tab" data-page="chrono" type="button">🕰️ تسلسل الأحداث</button>
-        <button class="nav-tab" data-page="reference" type="button">📚 المرجع</button>
-      </div>
-    </nav>
   </header>
+
+  <div class="app-shell">
+    <!-- right "case file" sidebar -->
+    <aside class="sidebar" id="sidebar" aria-label="التنقّل">
+      <div class="case-file">
+        <span class="cf-label">CASE FILE</span>
+        <span class="cf-no">No. <span id="cf-pct">4861</span></span>
+        <span class="cf-status">STATUS: INVESTIGATING</span>
+      </div>
+      <nav class="side-nav">
+        <button class="nav-tab is-active" data-page="tracker" type="button"><span class="nav-ic">🔎</span><span class="nav-lbl">الحلقات والأفلام</span></button>
+        <button class="nav-tab" data-page="stats" type="button"><span class="nav-ic">📊</span><span class="nav-lbl">إحصائياتي</span></button>
+        <button class="nav-tab" data-page="story" type="button"><span class="nav-ic">📖</span><span class="nav-lbl">القصة</span></button>
+        <button class="nav-tab" data-page="characters" type="button"><span class="nav-ic">👤</span><span class="nav-lbl">الشخصيات</span></button>
+        <button class="nav-tab" data-page="chrono" type="button"><span class="nav-ic">🕰️</span><span class="nav-lbl">تسلسل الأحداث</span></button>
+        <button class="nav-tab" data-page="reference" type="button"><span class="nav-ic">📚</span><span class="nav-lbl">المرجع</span></button>
+      </nav>
+      <div class="sidebar-foot">
+        <span class="cf-tag">إنّ الحقيقة دائمًا واحدة</span>
+      </div>
+    </aside>
 
   <main class="container">
    <div id="page-tracker" class="page">
@@ -300,6 +293,7 @@
     <div id="songs-body"></div>
    </div>
   </main>
+  </div><!-- /.app-shell -->
 
   <footer class="site-footer">
     <p>بياناتك محفوظة محليًا في متصفّحك فقط. عناوين الحلقات من ويكيبيديا العربية، والتصنيف والقصة من Detective Conan World.</p>
