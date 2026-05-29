@@ -22,6 +22,14 @@
   var TAG_LABEL = {};
   TAGS.forEach(function (t) { TAG_LABEL[t.key] = t.label; });
 
+  // Movie posters via MediaWiki's stable file path (no per-file hash needed).
+  var DCW_FILE = "https://www.detectiveconanworld.com/wiki/Special:FilePath/";
+  var POSTER_EXC = { 23: "Movie_23.png" }; // most posters are Movie_N.jpg; a few differ
+  function moviePoster(m) {
+    if (m.crossover) return DCW_FILE + "Lupin_III_vs._Detective_Conan_The_Movie.jpg";
+    return DCW_FILE + (POSTER_EXC[m.number] || "Movie_" + m.number + ".jpg");
+  }
+
   /* ---------------------------------------------------------------- state */
   var state = loadState(); // { id: { watched:bool, rating:0-5, note:"" } }
 
@@ -121,7 +129,7 @@
   })();
 
   /* --------------------------------------------------------- filters UI */
-  var filters = { status: "all", type: "all", kind: "all", season: "all", tag: "all", q: "",
+  var filters = { status: "all", type: "all", kind: "all", season: "all", tags: [], q: "",
                   favOnly: false, canonOnly: false };
 
   function passesFilter(item) {
@@ -136,8 +144,11 @@
     if (filters.kind !== "all") {
       if (item.type !== "episode" || item.kind !== filters.kind) return false;
     }
-    if (filters.tag !== "all") {
-      if (item.type !== "episode" || !item.tags || item.tags.indexOf(filters.tag) === -1) return false;
+    if (filters.tags.length) {
+      // multi-select: episode must carry at least one of the selected arcs/elements (OR)
+      if (item.type !== "episode" || !item.tags) return false;
+      var hit = filters.tags.some(function (t) { return item.tags.indexOf(t) !== -1; });
+      if (!hit) return false;
     }
     if (filters.season !== "all" && String(item.season) !== filters.season) {
       // movies have no season; only show them under "all"
@@ -183,7 +194,9 @@
     var isMovie = item.type === "movie";
 
     var badge = isMovie
-      ? '<span class="card-num movie-num">' + (item.crossover ? "✦" : escapeHtml(String(item.number))) + "</span>"
+      ? '<span class="card-num movie-num">' +
+          '<img class="badge-poster" src="' + escapeHtml(moviePoster(item)) + '" alt="" loading="lazy" onerror="this.remove()" />' +
+          "<b>" + (item.crossover ? "✦" : escapeHtml(String(item.number))) + "</b></span>"
       : '<span class="card-num" title="رقم ياباني / رقم دولي">' + escapeHtml(item.numberLabel) +
           (item.intNumber && item.intNumber !== item.numberLabel
             ? '<small>دولي ' + escapeHtml(item.intNumber) + "</small>" : "") +
@@ -238,18 +251,45 @@
     );
   }
 
+  /* ------------------------------------------------ collapsible seasons */
+  var COLLAPSE_KEY = "dc-collapsed-v1";
+  var collapsedSeasons = loadCollapsed();
+  function loadCollapsed() {
+    try {
+      var raw = localStorage.getItem(COLLAPSE_KEY);
+      if (raw) return new Set(JSON.parse(raw));
+    } catch (e) {}
+    // default: every season collapsed for a compact, scrollable landing
+    return new Set(SEASONS.map(function (s) { return s.season; }));
+  }
+  function saveCollapsed() {
+    try { localStorage.setItem(COLLAPSE_KEY, JSON.stringify([...collapsedSeasons])); } catch (e) {}
+  }
+  function filtersActive() {
+    return !!(filters.q || filters.favOnly || filters.canonOnly ||
+      filters.status !== "all" || filters.type !== "all" || filters.kind !== "all" ||
+      filters.season !== "all" || filters.tags.length);
+  }
+
   function render() {
     var visible = TIMELINE.filter(passesFilter);
+    var active = filtersActive(); // when searching/filtering, show everything expanded
     var html = [];
-    var lastSeason = null;
+    var curSeason = null, groupOpen = false;
     for (var i = 0; i < visible.length; i++) {
       var item = visible[i];
-      if (item.type === "episode" && item.season !== lastSeason) {
-        lastSeason = item.season;
-        html.push(seasonHeaderHtml(item.season));
+      if (item.type === "episode" && item.season !== curSeason) {
+        if (groupOpen) html.push("</div></section>");
+        curSeason = item.season;
+        var collapsed = !active && collapsedSeasons.has(curSeason);
+        html.push('<section class="season-group' + (collapsed ? " collapsed" : "") + '" data-season="' + curSeason + '">');
+        html.push(seasonHeaderHtml(curSeason));
+        html.push('<div class="season-body">');
+        groupOpen = true;
       }
       html.push(cardHtml(item));
     }
+    if (groupOpen) html.push("</div></section>");
     timelineEl.innerHTML = html.join("");
     emptyEl.hidden = visible.length !== 0;
     $("#result-count").textContent =
@@ -264,11 +304,12 @@
     }).length;
     var pct = info.total ? Math.round((watched / info.total) * 100) : 0;
     return (
-      '<div class="season-header" id="season-' + season + '">' +
+      '<button class="season-header" id="season-' + season + '" type="button" aria-label="طيّ/توسيع الموسم ' + season + '">' +
+        '<span class="season-chevron" aria-hidden="true">▾</span>' +
         '<span class="season-badge">الموسم ' + season + "</span>" +
         '<span class="season-count">' + watched + " / " + info.total + "</span>" +
         '<span class="season-mini"><span style="width:' + pct + '%"></span></span>' +
-      "</div>"
+      "</button>"
     );
   }
 
@@ -297,6 +338,16 @@
   /* ------------------------------------------------------------ events */
   // event delegation on the timeline
   timelineEl.addEventListener("click", function (e) {
+    var sh = e.target.closest(".season-header");
+    if (sh) {
+      var group = sh.closest(".season-group");
+      var n = +group.dataset.season;
+      var nowCollapsed = group.classList.toggle("collapsed");
+      if (nowCollapsed) collapsedSeasons.add(n); else collapsedSeasons.delete(n);
+      saveCollapsed();
+      return;
+    }
+
     var toggle = e.target.closest(".watch-toggle");
     if (toggle) { toggleWatched(toggle.dataset.id); return; }
 
@@ -368,8 +419,9 @@
     if (header) header.outerHTML = seasonHeaderHtml(item.season);
   }
 
-  // filter chips
+  // single-select filter chips (status / type / kind). The tag group is multi-select (below).
   document.querySelectorAll(".chip-group").forEach(function (group) {
+    if (group.id === "filter-tag") return;
     group.addEventListener("click", function (e) {
       var chip = e.target.closest(".chip");
       if (!chip) return;
@@ -398,12 +450,24 @@
       TAGS.map(function (t) {
         return '<button class="chip chip-tag pill-' + t.key + '" data-value="' + t.key + '">' + t.label + "</button>";
       }).join("");
+    var tagAllChip = function () { return tagGroup.querySelector('.chip[data-value="all"]'); };
     tagGroup.addEventListener("click", function (e) {
       var chip = e.target.closest(".chip");
       if (!chip) return;
-      tagGroup.querySelectorAll(".chip").forEach(function (c) { c.classList.remove("is-active"); });
-      chip.classList.add("is-active");
-      filters.tag = chip.dataset.value;
+      var val = chip.dataset.value;
+      if (val === "all") {
+        filters.tags = [];
+        tagGroup.querySelectorAll(".chip").forEach(function (c) {
+          c.classList.toggle("is-active", c.dataset.value === "all");
+        });
+      } else {
+        var i = filters.tags.indexOf(val);
+        if (i === -1) filters.tags.push(val); else filters.tags.splice(i, 1);
+        chip.classList.toggle("is-active", i === -1);
+        // "الكل" is active only when nothing is selected
+        var all = tagAllChip();
+        if (all) all.classList.toggle("is-active", filters.tags.length === 0);
+      }
       render();
     });
   }
@@ -419,7 +483,7 @@
   /* ----------------------------------------- quick actions & helpers */
   // reset every filter and sync the toolbar UI back to its default state
   function resetFilters() {
-    filters = { status: "all", type: "all", kind: "all", season: "all", tag: "all", q: "",
+    filters = { status: "all", type: "all", kind: "all", season: "all", tags: [], q: "",
                 favOnly: false, canonOnly: false };
     document.querySelectorAll(".chip-group").forEach(function (group) {
       group.querySelectorAll(".chip").forEach(function (c) {
@@ -438,6 +502,13 @@
     if (!timelineEl.querySelector(sel)) { resetFilters(); render(); }
     var card = timelineEl.querySelector(sel);
     if (!card) return;
+    // if the card is inside a collapsed season, expand it first
+    var group = card.closest(".season-group.collapsed");
+    if (group) {
+      group.classList.remove("collapsed");
+      collapsedSeasons.delete(+group.dataset.season);
+      saveCollapsed();
+    }
     card.scrollIntoView({ block: "center" });
     card.classList.remove("flash"); void card.offsetWidth; card.classList.add("flash");
   }
@@ -464,6 +535,18 @@
       btn.setAttribute("aria-pressed", String(on));
       render();
     });
+  });
+
+  // collapse-all / expand-all seasons
+  var collapseAllBtn = $("#btn-collapse-all");
+  if (collapseAllBtn) collapseAllBtn.addEventListener("click", function () {
+    collapsedSeasons = new Set(SEASONS.map(function (s) { return s.season; }));
+    saveCollapsed(); render(); window.scrollTo(0, 0);
+  });
+  var expandAllBtn = $("#btn-expand-all");
+  if (expandAllBtn) expandAllBtn.addEventListener("click", function () {
+    collapsedSeasons = new Set();
+    saveCollapsed(); render();
   });
 
   /* --------------------------------------------------- export / import */
@@ -734,7 +817,9 @@
         var st = state[m.id] || {};
         return '<button class="movie-card' + (st.watched ? " watched" : "") + (m.crossover ? " is-crossover" : "") +
           '" data-goto="' + m.id + '" type="button">' +
-          '<span class="movie-num">' + (m.crossover ? "✦" : escapeHtml(String(m.number))) + "</span>" +
+          '<span class="movie-poster"><img src="' + escapeHtml(moviePoster(m)) + '" alt="' + escapeHtml(m.title) +
+            '" loading="lazy" onerror="this.closest(\'.movie-poster\').classList.add(\'noposter\');this.remove()" />' +
+            '<span class="movie-num">' + (m.crossover ? "✦" : escapeHtml(String(m.number))) + "</span></span>" +
           '<span class="movie-info"><span class="movie-name">' + escapeHtml(m.title) + "</span>" +
           '<span class="movie-meta">' + (m.year ? escapeHtml(String(m.year)) + " · " : "") +
             "بعد الحلقة " + m.afterEpisode + "</span></span>" +
