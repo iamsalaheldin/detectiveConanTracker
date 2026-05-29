@@ -19,7 +19,9 @@
       "Bash(git config *)",
       "Bash(git add *)",
       "Bash(git commit -q -m ' *)",
-      "Bash(git checkout *)"
+      "Bash(git checkout *)",
+      "Bash(find . -type f \\\\\\( -iname \"*.png\" -o -iname \"*.jpg\" -o -iname \"*.jpeg\" -o -iname \"*.webp\" -o -iname \"*.svg\" \\\\\\) ! -path \"./stitch_case_closed_chronicles/*\" ! -path \"./.git/*\")",
+      "Bash(ls -la assets)"
     ]
   }
 }

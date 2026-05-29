@@ -22,6 +22,14 @@
   var TAG_LABEL = {};
   TAGS.forEach(function (t) { TAG_LABEL[t.key] = t.label; });
 
+  // Movie posters via MediaWiki's stable file path (no per-file hash needed).
+  var DCW_FILE = "https://www.detectiveconanworld.com/wiki/Special:FilePath/";
+  var POSTER_EXC = { 23: "Movie_23.png" }; // most posters are Movie_N.jpg; a few differ
+  function moviePoster(m) {
+    if (m.crossover) return DCW_FILE + "Lupin_III_vs._Detective_Conan_The_Movie.jpg";
+    return DCW_FILE + (POSTER_EXC[m.number] || "Movie_" + m.number + ".jpg");
+  }
+
   /* ---------------------------------------------------------------- state */
   var state = loadState(); // { id: { watched:bool, rating:0-5, note:"" } }
 
@@ -183,7 +191,9 @@
     var isMovie = item.type === "movie";
 
     var badge = isMovie
-      ? '<span class="card-num movie-num">' + (item.crossover ? "✦" : escapeHtml(String(item.number))) + "</span>"
+      ? '<span class="card-num movie-num">' +
+          '<img class="badge-poster" src="' + escapeHtml(moviePoster(item)) + '" alt="" loading="lazy" onerror="this.remove()" />' +
+          "<b>" + (item.crossover ? "✦" : escapeHtml(String(item.number))) + "</b></span>"
       : '<span class="card-num" title="رقم ياباني / رقم دولي">' + escapeHtml(item.numberLabel) +
           (item.intNumber && item.intNumber !== item.numberLabel
             ? '<small>دولي ' + escapeHtml(item.intNumber) + "</small>" : "") +
@@ -734,7 +744,9 @@
         var st = state[m.id] || {};
         return '<button class="movie-card' + (st.watched ? " watched" : "") + (m.crossover ? " is-crossover" : "") +
           '" data-goto="' + m.id + '" type="button">' +
-          '<span class="movie-num">' + (m.crossover ? "✦" : escapeHtml(String(m.number))) + "</span>" +
+          '<span class="movie-poster"><img src="' + escapeHtml(moviePoster(m)) + '" alt="' + escapeHtml(m.title) +
+            '" loading="lazy" onerror="this.closest(\'.movie-poster\').classList.add(\'noposter\');this.remove()" />' +
+            '<span class="movie-num">' + (m.crossover ? "✦" : escapeHtml(String(m.number))) + "</span></span>" +
           '<span class="movie-info"><span class="movie-name">' + escapeHtml(m.title) + "</span>" +
           '<span class="movie-meta">' + (m.year ? escapeHtml(String(m.year)) + " · " : "") +
             "بعد الحلقة " + m.afterEpisode + "</span></span>" +
