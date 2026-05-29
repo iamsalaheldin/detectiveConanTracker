@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>APTX-4861 Tracker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&amp;family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&amp;family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#ffdad4",
+                        "on-primary-fixed-variant": "#1f477b",
+                        "secondary-container": "#e42214",
+                        "on-error": "#ffffff",
+                        "on-surface": "#1a1c1c",
+                        "on-primary-fixed": "#001b3c",
+                        "inverse-primary": "#a7c8ff",
+                        "error-container": "#ffdad6",
+                        "surface-container-highest": "#e2e2e2",
+                        "tertiary-fixed": "#ffe16d",
+                        "error": "#ba1a1a",
+                        "surface-bright": "#f9f9f9",
+                        "on-tertiary-fixed-variant": "#544600",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-container": "#4c3e00",
+                        "on-background": "#1a1c1c",
+                        "primary-fixed": "#d5e3ff",
+                        "on-surface-variant": "#43474f",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#fffbff",
+                        "primary": "#001e40",
+                        "primary-fixed-dim": "#a7c8ff",
+                        "secondary-fixed-dim": "#ffb4a8",
+                        "surface-tint": "#3a5f94",
+                        "surface": "#f9f9f9",
+                        "tertiary-fixed-dim": "#e9c400",
+                        "surface-container-low": "#f3f3f3",
+                        "surface-dim": "#dadada",
+                        "surface-variant": "#e2e2e2",
+                        "tertiary": "#705d00",
+                        "secondary": "#bc0000",
+                        "outline-variant": "#c3c6d1",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#2f3131",
+                        "on-tertiary-fixed": "#221b00",
+                        "primary-container": "#003366",
+                        "background": "#f9f9f9",
+                        "on-primary-container": "#799dd6",
+                        "surface-container": "#eeeeee",
+                        "on-secondary": "#ffffff",
+                        "outline": "#737780",
+                        "tertiary-container": "#c9a900",
+                        "on-secondary-fixed": "#410000",
+                        "on-secondary-fixed-variant": "#930000",
+                        "surface-container-high": "#e8e8e8",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-primary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "diagonal-offset": "12px",
+                        "unit": "8px",
+                        "margin-desktop": "40px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Bricolage Grotesque"],
+                        "label-md": ["JetBrains Mono"],
+                        "body-md": ["Be Vietnam Pro"],
+                        "label-sm": ["JetBrains Mono"],
+                        "headline-xl": ["Bricolage Grotesque"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "headline-lg-mobile": ["Bricolage Grotesque"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "fontWeight": "800" }],
+                        "label-md": ["14px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "1.2", "fontWeight": "500" }],
+                        "headline-xl": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "800" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .halftone-bg {
+            background-image: radial-gradient(var(--tw-colors-outline-variant) 1px, transparent 1px);
+            background-size: 4px 4px;
+        }
+        .manga-border {
+            border: 3px solid var(--tw-colors-on-surface);
+        }
+        .manga-shadow {
+            box-shadow: 6px 6px 0px 0px var(--tw-colors-on-surface);
+        }
+        .diagonal-divider {
+            transform: skewY(-3deg);
+        }
+        .anime-flash:hover {
+            animation: flash 0.3s ease-in-out;
+        }
+        @keyframes flash {
+            0% { background-color: var(--tw-colors-on-surface); color: var(--tw-colors-surface); }
+            50% { background-color: white; color: black; }
+            100% { background-color: var(--tw-colors-secondary-container); color: var(--tw-colors-on-secondary-container); }
+        }
+        .case-file-texture {
+            background-color: #E3DCC5;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md antialiased overflow-x-hidden selection:bg-secondary selection:text-on-secondary">
+<!-- TopAppBar -->
+<header class="bg-surface border-b-4 border-on-surface flex flex-row-reverse justify-between items-center px-gutter py-unit w-full sticky top-0 z-50 overflow-hidden hidden md:flex">
+<div class="flex items-center gap-4">
+<h1 class="font-headline-lg text-headline-lg font-black text-secondary tracking-tighter italic">APTX-4861 TRACKER</h1>
+</div>
+<div class="flex-1 max-w-md mx-8">
+<div class="relative manga-border bg-surface-container flex items-center">
+<span class="material-symbols-outlined px-3 text-on-surface-variant">search</span>
+<input class="w-full bg-transparent border-none focus:ring-0 font-label-md text-on-surface py-2 placeholder:text-on-surface-variant" placeholder="Search case files..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-secondary-container transition-colors rounded-none manga-border bg-surface flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+<button class="p-2 hover:bg-secondary-container transition-colors rounded-none manga-border bg-surface flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface" style="font-variation-settings: 'FILL' 0;">person</span>
+</button>
+</div>
+</header>
+<!-- TopAppBar Mobile -->
+<header class="bg-surface border-b-4 border-on-surface flex flex-row-reverse justify-between items-center px-gutter py-unit w-full sticky top-0 z-50 md:hidden">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-black text-secondary tracking-tighter italic">APTX-4861</h1>
+<button class="p-2 manga-border bg-surface flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface">search</span>
+</button>
+</header>
+<div class="flex flex-col md:flex-row min-h-screen">
+<!-- SideNavBar (Desktop) -->
+<nav class="hidden md:flex flex-col w-64 bg-surface-container border-l-4 border-on-surface fixed inset-y-0 right-0 z-40 mt-[72px]">
+<div class="p-6 border-b-4 border-on-surface">
+<h2 class="font-headline-xl text-headline-xl font-black text-on-surface leading-none mb-2">CASE FILE #952</h2>
+<p class="font-label-sm text-label-sm text-secondary font-bold">STATUS: INVESTIGATING</p>
+</div>
+<div class="flex-1 overflow-y-auto py-4 flex flex-col gap-2 px-2">
+<!-- Active Tab -->
+<a class="bg-secondary-container text-on-secondary-container border-2 border-on-surface m-1 rounded-none flex items-center gap-3 p-3 font-label-md text-label-md scale-95 duration-100" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">folder_open</span>
+                    Tracker
+                </a>
+<!-- Inactive Tabs -->
+<a class="text-on-surface-variant hover:skew-x-2 transition-transform flex items-center gap-3 p-4 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">analytics</span>
+                    Stats
+                </a>
+<a class="text-on-surface-variant hover:skew-x-2 transition-transform flex items-center gap-3 p-4 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">groups</span>
+                    Characters
+                </a>
+<a class="text-on-surface-variant hover:skew-x-2 transition-transform flex items-center gap-3 p-4 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">history_edu</span>
+                    Timeline
+                </a>
+<a class="text-on-surface-variant hover:skew-x-2 transition-transform flex items-center gap-3 p-4 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">biotech</span>
+                    Reference
+                </a>
+</div>
+<div class="p-4 border-t-4 border-on-surface">
+<button class="w-full bg-primary text-on-primary manga-border manga-shadow py-3 font-label-md text-label-md uppercase tracking-wider anime-flash">
+                    REPORT FINDINGS
+                </button>
+<a class="mt-4 text-on-surface-variant hover:skew-x-2 transition-transform flex items-center gap-3 p-2 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">settings</span>
+                    Settings
+                </a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full md:mr-64 pb-24 md:pb-8 relative">
+<!-- Global Progress Bar -->
+<div class="w-full h-8 bg-surface-container border-b-4 border-on-surface flex rtl:flex-row-reverse relative overflow-hidden">
+<div class="h-full bg-secondary border-r-4 border-on-surface" style="width: 42%;"></div>
+<div class="absolute inset-0 halftone-bg opacity-30 pointer-events-none"></div>
+<div class="absolute inset-0 flex items-center justify-center font-label-md text-label-md font-bold text-on-surface mix-blend-difference text-white">
+                    INVESTIGATION PROGRESS: 42%
+                </div>
+</div>
+<div class="p-4 md:p-margin-desktop max-w-7xl mx-auto space-y-12">
+<!-- Action Bar -->
+<div class="flex justify-between items-center bg-surface-container p-4 manga-border manga-shadow">
+<div class="flex gap-4">
+<button class="bg-surface hover:bg-surface-container-high transition-colors manga-border px-4 py-2 font-label-md text-label-md flex items-center gap-2">
+<span class="material-symbols-outlined">download</span>
+                            Export Data
+                        </button>
+<button class="bg-surface hover:bg-surface-container-high transition-colors manga-border px-4 py-2 font-label-md text-label-md flex items-center gap-2">
+<span class="material-symbols-outlined">upload</span>
+                            Import Data
+                        </button>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase">Sort By:</span>
+<select class="bg-surface manga-border font-label-sm py-1 px-2 focus:ring-0">
+<option>Release Date</option>
+<option>Episode Number</option>
+<option>Importance</option>
+</select>
+</div>
+</div>
+<!-- Hero: Next to Watch -->
+<section class="relative">
+<div class="absolute -inset-2 halftone-bg opacity-20 -z-10 transform skew-y-2"></div>
+<div class="case-file-texture manga-border manga-shadow p-6 md:p-10 relative overflow-hidden">
+<!-- Top Tab -->
+<div class="absolute top-0 right-0 bg-secondary text-on-secondary border-l-4 border-b-4 border-on-surface px-6 py-2 font-headline-lg text-headline-lg italic tracking-tighter">
+                            NEXT EPISODE
+                        </div>
+<div class="flex flex-col md:flex-row gap-8 items-start mt-8">
+<!-- Image/Placeholder -->
+<div class="w-full md:w-1/3 aspect-video bg-surface-container manga-border relative overflow-hidden group">
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-6xl text-on-surface-variant opacity-50 group-hover:scale-110 transition-transform">theaters</span>
+</div>
+<div class="absolute bottom-0 left-0 bg-primary text-on-primary px-3 py-1 font-label-sm border-t-2 border-r-2 border-on-surface">
+                                    Ep. 345
+                                </div>
+</div>
+<!-- Content -->
+<div class="flex-1 space-y-4">
+<div class="flex flex-wrap gap-2 mb-2">
+<span class="bg-secondary-container text-on-secondary-container border-2 border-on-surface px-2 py-1 font-label-sm uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">priority_high</span> Canon
+                                    </span>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed-variant border-2 border-on-surface px-2 py-1 font-label-sm uppercase">Black Organization</span>
+<span class="bg-surface text-on-surface border-2 border-on-surface px-2 py-1 font-label-sm uppercase">2.5 Hours Special</span>
+</div>
+<h2 class="font-headline-xl text-headline-xl font-black text-on-surface leading-tight">Head-to-Head Match with the Black Organization</h2>
+<h3 class="font-headline-lg text-headline-lg text-on-surface-variant opacity-80 mb-4">A Dual Mystery on a Full Moon Night</h3>
+<p class="font-body-lg text-body-lg text-on-surface mb-6 max-w-2xl">
+                                    An invitation to a Halloween party aboard a ghost ship is sent to Kogoro Mouri. However, Conan realizes this is a trap set by Vermouth to lure out Ai Haibara.
+                                </p>
+<div class="flex gap-4 pt-4 border-t-2 border-on-surface border-dashed">
+<button class="bg-secondary text-on-secondary manga-border px-8 py-3 font-label-md text-label-md uppercase tracking-wider anime-flash flex items-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+                                        Mark as Watched
+                                    </button>
+<button class="bg-surface hover:bg-surface-container-high transition-colors manga-border px-6 py-3 font-label-md text-label-md flex items-center gap-2">
+<span class="material-symbols-outlined">menu_book</span>
+                                        View Case Notes
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Filter Strip -->
+<div class="flex flex-wrap gap-3 py-4 border-y-4 border-on-surface diagonal-divider my-8 -mx-4 px-4 md:mx-0 md:px-0 bg-surface">
+<div class="font-headline-lg text-headline-lg text-on-surface italic pr-4 border-l-4 border-on-surface flex items-center">FILTERS</div>
+<button class="bg-primary-container text-on-primary-container manga-border px-4 py-2 font-label-md text-label-md">All Cases</button>
+<button class="bg-surface hover:bg-surface-container-high manga-border px-4 py-2 font-label-md text-label-md">Canon Only</button>
+<button class="bg-surface hover:bg-surface-container-high manga-border px-4 py-2 font-label-md text-label-md">Black Org Arcs</button>
+<button class="bg-surface hover:bg-surface-container-high manga-border px-4 py-2 font-label-md text-label-md">Kaitou Kid</button>
+<button class="bg-surface hover:bg-surface-container-high manga-border px-4 py-2 font-label-md text-label-md text-on-surface-variant">Anime Original</button>
+</div>
+<!-- Case Files Grid -->
+<section>
+<h3 class="font-headline-lg text-headline-lg font-black mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-4xl">folder_shared</span>
+                        RECENT CASE FILES
+                    </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Card 1 -->
+<div class="case-file-texture manga-border manga-shadow p-4 flex flex-col relative group">
+<!-- Status Indicator -->
+<div class="absolute -right-3 -top-3 bg-tertiary text-on-tertiary manga-border w-10 h-10 flex items-center justify-center rounded-full z-10 shadow-md">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="flex justify-between items-start mb-4 border-b-2 border-on-surface pb-2">
+<div>
+<span class="font-label-sm text-on-surface-variant">INT. #135</span>
+<h4 class="font-headline-lg text-xl font-bold">Ep. 128</h4>
+</div>
+<span class="bg-secondary-container text-on-secondary-container border border-on-surface px-2 py-0.5 font-label-sm text-[10px] uppercase">BO Arc</span>
+</div>
+<h5 class="font-body-md font-bold mb-2 flex-1">The Black Organization: One Billion Yen Robbery Case</h5>
+<div class="mt-4 flex gap-2">
+<button class="flex-1 bg-surface manga-border py-1 font-label-sm hover:bg-surface-container">Details</button>
+<button class="bg-surface manga-border px-2 hover:bg-surface-container" title="Edit Notes">
+<span class="material-symbols-outlined text-[18px]">edit_note</span>
+</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="case-file-texture manga-border p-4 flex flex-col relative group opacity-60 hover:opacity-100 transition-opacity grayscale hover:grayscale-0">
+<div class="flex justify-between items-start mb-4 border-b-2 border-on-surface pb-2">
+<div>
+<span class="font-label-sm text-on-surface-variant">INT. #136</span>
+<h4 class="font-headline-lg text-xl font-bold">Ep. 129</h4>
+</div>
+<span class="bg-surface text-on-surface border border-on-surface px-2 py-0.5 font-label-sm text-[10px] uppercase">Canon</span>
+</div>
+<h5 class="font-body-md font-bold mb-2 flex-1">The Girl from the Black Organization and the University Professor Murder Case</h5>
+<div class="mt-4 flex gap-2">
+<button class="flex-1 bg-primary text-on-primary manga-border py-1 font-label-sm anime-flash">Watch</button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="case-file-texture manga-border p-4 flex flex-col relative group opacity-60 grayscale">
+<div class="flex justify-between items-start mb-4 border-b-2 border-on-surface pb-2">
+<div>
+<span class="font-label-sm text-on-surface-variant">INT. #137</span>
+<h4 class="font-headline-lg text-xl font-bold">Ep. 130</h4>
+</div>
+<span class="bg-surface-container text-on-surface-variant border border-on-surface px-2 py-0.5 font-label-sm text-[10px] uppercase">Filler</span>
+</div>
+<h5 class="font-body-md font-bold mb-2 flex-1">The Indiscriminate Stadium Threatening Case (Part 1)</h5>
+<div class="mt-4 flex gap-2">
+<button class="flex-1 bg-surface manga-border py-1 font-label-sm opacity-50 cursor-not-allowed">Locked</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+<!-- BottomNavBar (Mobile) -->
+<nav class="bg-surface border-t-4 border-on-surface fixed bottom-0 right-0 w-full z-50 flex flex-row-reverse justify-around items-center px-4 pb-4 h-20 md:hidden rounded-t-none">
+<!-- Active -->
+<button class="flex flex-col items-center justify-center bg-tertiary-container text-on-tertiary-container border-2 border-on-surface py-1 px-3 -rotate-2 scale-110">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">folder_open</span>
+<span class="font-label-sm text-label-sm mt-1">Tracker</span>
+</button>
+<!-- Inactive -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined">query_stats</span>
+<span class="font-label-sm text-label-sm mt-1">Stats</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-sm text-label-sm mt-1">Intel</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined">event_repeat</span>
+<span class="font-label-sm text-label-sm mt-1">Clock</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined">library_books</span>
+<span class="font-label-sm text-label-sm mt-1">Notes</span>
+</button>
+</nav>
+</body></html>

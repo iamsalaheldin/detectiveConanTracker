@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>متتبّع مشاهدة المحقق كونان</title>
+  <meta name="description" content="تتبّع مشاهدتك لحلقات وأفلام المحقق كونان بترتيبها الزمني" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Lalezar&family=Tajawal:wght@400;500;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <!-- decorative speed-line burst behind the header -->
+  <header class="site-header">
+    <div class="header-burst" aria-hidden="true"></div>
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <!-- magnifying glass + bow-tie motif -->
+          <svg viewBox="0 0 64 64" width="56" height="56" role="img" aria-label="شعار">
+            <circle cx="26" cy="26" r="16" fill="none" stroke="currentColor" stroke-width="5" />
+            <circle cx="26" cy="26" r="9" fill="rgba(215,40,47,.18)" />
+            <line x1="38" y1="38" x2="56" y2="56" stroke="currentColor" stroke-width="6" stroke-linecap="round" />
+            <path class="bowtie" d="M44 12 L54 7 L54 23 L44 18 Z M44 12 L34 7 L34 23 L44 18 Z" />
+            <circle cx="44" cy="15" r="2.4" fill="#fff" />
+          </svg>
+        </span>
+        <div class="brand-text">
+          <h1>المحقق كونان</h1>
+          <p>سِجلّ مشاهدة الحلقات والأفلام</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button id="btn-export" class="btn btn-ghost" type="button" title="تنزيل نسخة احتياطية من تقدّمك">⬇ تصدير</button>
+        <button id="btn-import" class="btn btn-ghost" type="button" title="استعادة تقدّمك من ملف">⬆ استيراد</button>
+        <input id="file-import" type="file" accept="application/json,.json" hidden />
+      </div>
+    </div>
+
+    <nav class="main-nav" aria-label="التنقّل">
+      <div class="main-nav-inner">
+        <button class="nav-tab is-active" data-page="tracker" type="button">🔎 الحلقات والأفلام</button>
+        <button class="nav-tab" data-page="stats" type="button">📊 إحصائياتي</button>
+        <button class="nav-tab" data-page="story" type="button">📖 القصة</button>
+        <button class="nav-tab" data-page="characters" type="button">👤 الشخصيات</button>
+        <button class="nav-tab" data-page="chrono" type="button">🕰️ تسلسل الأحداث</button>
+        <button class="nav-tab" data-page="reference" type="button">📚 المرجع</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container">
+   <div id="page-tracker" class="page">
+    <!-- overall progress -->
+    <section class="progress-panel panel" aria-label="ملخص التقدّم">
+      <div class="progress-head">
+        <span class="case-stamp">ملف القضية</span>
+        <div class="progress-stats" id="stats"></div>
+      </div>
+      <div class="progress-bar" role="progressbar" aria-label="نسبة الإنجاز">
+        <div class="progress-fill" id="progress-fill"></div>
+        <span class="progress-label" id="progress-label">0%</span>
+      </div>
+      <div class="mini-stats" id="mini-stats"></div>
+    </section>
+
+    <!-- toolbar: search + filters -->
+    <section class="toolbar panel" aria-label="بحث وفلاتر">
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+          <circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="2.4" />
+          <line x1="15" y1="15" x2="21" y2="21" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" />
+        </svg>
+        <input id="search" type="search" placeholder="ابحث بالاسم أو رقم الحلقة…" autocomplete="off" />
+      </div>
+
+      <div class="filter-row">
+        <div class="chip-group" id="filter-status" data-filter="status" role="group" aria-label="حالة المشاهدة">
+          <button class="chip is-active" data-value="all">الكل</button>
+          <button class="chip" data-value="unwatched">غير مشاهَد</button>
+          <button class="chip" data-value="watched">مشاهَد</button>
+        </div>
+        <div class="chip-group" id="filter-type" data-filter="type" role="group" aria-label="النوع">
+          <button class="chip is-active" data-value="all">حلقات وأفلام</button>
+          <button class="chip" data-value="episode">حلقات</button>
+          <button class="chip" data-value="movie">أفلام</button>
+        </div>
+        <div class="chip-group" id="filter-kind" data-filter="kind" role="group" aria-label="التصنيف">
+          <button class="chip is-active" data-value="all">جميع التصنيفات</button>
+          <button class="chip" data-value="canon">قصة أصلية</button>
+          <button class="chip" data-value="filler">حشو</button>
+        </div>
+        <label class="season-jump">
+          <span>الموسم:</span>
+          <select id="filter-season"></select>
+        </label>
+      </div>
+
+      <div class="filter-tags-row">
+        <span class="filter-tags-label">الأقواس والعناصر:</span>
+        <div class="chip-group chip-group-wrap" id="filter-tag" data-filter="tag" role="group" aria-label="الأقواس والعناصر"></div>
+      </div>
+    </section>
+
+    <div class="quick-bar">
+      <button id="btn-continue" class="btn quick-action" type="button" title="انتقل إلى أوّل حلقة غير مشاهَدة">▶ أكمل المشاهدة</button>
+      <button id="btn-random" class="btn quick-action" type="button" title="اختر عنصرًا عشوائيًا من النتائج الحالية">🎲 عشوائية</button>
+      <button class="btn btn-ghost quick-toggle" data-toggle="favOnly" type="button" aria-pressed="false" title="عرض المفضّلة فقط">⭐ المفضّلة</button>
+      <button class="btn btn-ghost quick-toggle" data-toggle="canonOnly" type="button" aria-pressed="false" title="إخفاء حلقات الحشو">📖 مسار القصة</button>
+    </div>
+
+    <p class="result-count" id="result-count" aria-live="polite"></p>
+
+    <!-- the timeline -->
+    <section id="timeline" class="timeline" aria-label="القائمة الزمنية"></section>
+    <p id="empty" class="empty-state" hidden>لا توجد نتائج مطابقة للبحث أو الفلاتر.</p>
+   </div><!-- /#page-tracker -->
+
+   <div id="page-stats" class="page" hidden>
+    <section class="story-hero panel">
+      <div class="story-hero-burst" aria-hidden="true"></div>
+      <p class="story-kicker">لوحة التقدّم</p>
+      <h2 class="story-quote">إحصائياتي</h2>
+      <p class="story-lead">ملخّصٌ لرحلتك في عالم المحقق كونان: نسب الإنجاز، تقييماتك، والمتبقّي أمامك.</p>
+    </section>
+    <div id="stats-body"></div>
+   </div><!-- /#page-stats -->
+
+   <div id="page-story" class="page" hidden>
+    <!-- hero -->
+    <section class="story-hero panel">
+      <div class="story-hero-burst" aria-hidden="true"></div>
+      <p class="story-kicker">المحقق كونان · 名探偵コナン · Case Closed</p>
+      <h2 class="story-quote">«الحقيقة دائمًا واحدة!»</h2>
+      <p class="story-lead">
+        مراهقٌ عبقريٌّ في حلّ الألغاز يُحاصره تنظيمٌ إجراميّ غامض فيُجبره على تجرّع عقّارٍ تجريبي…
+        لكنّ السمّ لا يقتله، بل يُعيده طفلًا. هكذا تبدأ واحدة من أطول قصص الغموض والتشويق في تاريخ المانغا.
+      </p>
+    </section>
+
+    <!-- premise -->
+    <section class="story-section panel">
+      <h3 class="story-h">نظرة عامة</h3>
+      <p>
+        <strong>شينيتشي كودو</strong> طالبٌ في الثانوية ومحقّقٌ بارع يتعاون أحيانًا مع الشرطة في حلّ
+        القضايا. وبينما يحقّق في إحدى القضايا، يباغته أفرادٌ من عصابةٍ إجرامية تُعرف بـ«المنظمة السوداء»
+        ويُرغمونه على ابتلاع عقّارٍ تجريبي كان من المفترض أن يقتله. غير أنّ العقّار يُقلّص جسده ليعود
+        طفلًا بعقلٍ ناضج.
+      </p>
+      <p>
+        يتّخذ شينيتشي اسمًا مستعارًا هو <strong>كونان إيدوغاوا</strong>، ويُخفي هويّته الحقيقية فيسكن مع
+        صديقة طفولته <strong>ران موري</strong> ووالدها <strong>كوغورو موري</strong> المحقّق الخاص. وبمساعدة
+        اختراعات الدكتور <strong>أغاسا</strong> — كالمخدّر المنوّم وربطة العنق المغيِّرة للصوت — يحلّ كونان
+        القضايا من وراء الستار وهو يبدو مجرّد طفلٍ فضولي.
+      </p>
+    </section>
+
+    <!-- main arc -->
+    <section class="story-section panel">
+      <h3 class="story-h">الخيط الرئيسي: المنظمة السوداء</h3>
+      <p>
+        تدور القصة الكبرى حول تعقّب كونان لـ«المنظمة السوداء»، العصابة المسؤولة عن تحوّله. ويبقى العقّار
+        الذي تجرّعه — المعروف بالرمز <strong>APTX&nbsp;4869</strong> — أحد أكبر ألغاز السلسلة.
+      </p>
+      <p>
+        نقطة تحوّلٍ محورية تأتي مع <strong>آي هايبارا</strong>، الطالبة الجديدة التي تكشف أنّها عضوة سابقة
+        في المنظمة باسمها الحركي <strong>شيري</strong>، وهي صانعة العقّار المقلِّص نفسه. لقد تجرّعته بدورها
+        هربًا من ملاحقة المنظمة، ثمّ انضمّت إلى فريق تحقيق كونان. وتتشابك الأحداث مع تدخّل
+        <strong>الإف بي آي</strong>، وزرع عميلٍ سرّي باسم <strong>كير</strong> داخل المنظمة.
+      </p>
+    </section>
+
+    <!-- characters -->
+    <section class="story-section panel">
+      <h3 class="story-h">الشخصيات الرئيسية</h3>
+      <div class="char-grid">
+        <article class="char-card"><h4>كونان إيدوغاوا / شينيتشي كودو</h4><p>البطل؛ محقّقٌ مراهق عبقري حُبس في جسد طفل يحلّ الألغاز مع الحفاظ على سرّ هويّته.</p></article>
+        <article class="char-card"><h4>ران موري</h4><p>صديقة طفولة شينيتشي التي يعيش كونان في بيتها، وصلته بحياته السابقة.</p></article>
+        <article class="char-card"><h4>كوغورو موري</h4><p>والد ران ومحقّقٌ خاص، يحلّ كونان قضاياه من خلف الكواليس.</p></article>
+        <article class="char-card"><h4>آي هايبارا (شيري)</h4><p>عالِمةٌ سابقة في المنظمة السوداء وصانعة عقّار APTX 4869، صارت حليفةً وعضوة في فريق المحققين الصغار.</p></article>
+        <article class="char-card"><h4>فريق المحققين الصغار</h4><p>مجموعة من زملاء كونان في المدرسة الابتدائية يرافقونه في مغامراته وتحقيقاته.</p></article>
+        <article class="char-card"><h4>هيجي هاتوري</h4><p>محقّقٌ مراهق من أوساكا، أحد أقرب حلفاء كونان.</p></article>
+        <article class="char-card"><h4>كيد اللص</h4><p>لصٌّ مُحتالٌ بارع يظهر بين الحين والآخر، تارةً خصمًا وتارةً حليفًا.</p></article>
+        <article class="char-card"><h4>جودي والإف بي آي</h4><p>عملاء يطاردون المنظمة السوداء ويتقاطع مسارهم مع كونان.</p></article>
+        <article class="char-card char-villain"><h4>المنظمة السوداء (جين وفودكا)</h4><p>العصابة الإجرامية المسؤولة عن محنة كونان، ومن أبرز أفرادها العميلان جين وفودكا.</p></article>
+      </div>
+    </section>
+
+    <!-- facts -->
+    <section class="story-section panel">
+      <h3 class="story-h">حقائق أساسية</h3>
+      <div class="facts-grid">
+        <div class="fact"><span class="fact-k">المؤلّف</span><span class="fact-v">غوشو أوياما</span></div>
+        <div class="fact"><span class="fact-k">بداية المانغا</span><span class="fact-v">يناير 1994 (Weekly Shōnen Sunday)</span></div>
+        <div class="fact"><span class="fact-k">عدد المجلّدات</span><span class="fact-v">107 مجلّدًا (حتى 2025)</span></div>
+        <div class="fact"><span class="fact-k">بداية الأنمي</span><span class="fact-v">يناير 1996</span></div>
+        <div class="fact"><span class="fact-k">عدد الحلقات</span><span class="fact-v">أكثر من 1150 حلقة</span></div>
+        <div class="fact"><span class="fact-k">الاسم بأمريكا</span><span class="fact-v">Case Closed</span></div>
+      </div>
+      <p class="story-source">المصدر: موسوعة Detective Conan World — <span dir="ltr">detectiveconanworld.com/wiki/Detective_Conan</span></p>
+    </section>
+   </div><!-- /#page-story -->
+
+   <div id="page-characters" class="page" hidden>
+    <section class="story-hero panel">
+      <div class="story-hero-burst" aria-hidden="true"></div>
+      <p class="story-kicker">دليل الشخصيات</p>
+      <h2 class="story-quote">الشخصيات</h2>
+      <p class="story-lead">أبرز شخصيات عالم المحقق كونان موزّعةً على مجموعاتها، مع صورها ونبذةٍ عن كلٍّ منها.</p>
+    </section>
+    <div id="characters"></div>
+    <p class="story-source">المصدر والصور: موسوعة Detective Conan World — <span dir="ltr">detectiveconanworld.com/wiki/Characters</span></p>
+   </div><!-- /#page-characters -->
+
+   <div id="page-chrono" class="page" hidden>
+    <section class="story-hero panel">
+      <div class="story-hero-burst" aria-hidden="true"></div>
+      <p class="story-kicker">تسلسل أحداث القصة</p>
+      <h2 class="story-quote">الخطّ الزمني</h2>
+      <p class="story-lead">
+        تسلسلٌ زمنيٌّ لأحداث عالم المحقق كونان، من ولادات الشخصيات قبل نحو قرن وحتى الحاضر.
+        تعتمد السلسلة على «زمنٍ عائم»: نحو 30 عامًا من النشر تعادل قرابة 6 أشهر داخل القصة.
+      </p>
+    </section>
+    <section class="panel chrono-panel">
+      <div id="chronology" class="chrono"></div>
+      <p class="story-source">المصدر: موسوعة Detective Conan World — <span dir="ltr">detectiveconanworld.com/wiki/Timeline</span></p>
+    </section>
+   </div><!-- /#page-chrono -->
+
+   <!-- ===================== REFERENCE HUB + SUB-PAGES ===================== -->
+   <div id="page-reference" class="page" hidden>
+    <section class="story-hero panel">
+      <div class="story-hero-burst" aria-hidden="true"></div>
+      <p class="story-kicker">دليل العالم</p>
+      <h2 class="story-quote">المرجع</h2>
+      <p class="story-lead">كل ما يخصّ عالم المحقق كونان: الأفلام، الأقواس، المنظمة السوداء، الاختراعات، المصطلحات، الحلقات الخاصة، المانغا، والأغاني.</p>
+    </section>
+    <div class="hub-grid">
+      <button class="hub-card" data-page="movies" type="button"><span class="hub-ic">🎬</span><span class="hub-t">الأفلام</span><span class="hub-d">29 فيلمًا بترتيبها على الخط الزمني</span></button>
+      <button class="hub-card" data-page="arcs" type="button"><span class="hub-ic">🧩</span><span class="hub-t">الأقواس والقضايا</span><span class="hub-d">أبرز الأقواس القصصية وحلقاتها</span></button>
+      <button class="hub-card" data-page="blackorg" type="button"><span class="hub-ic">🕴️</span><span class="hub-t">المنظمة السوداء</span><span class="hub-d">الأعضاء والأسماء الحركية و APTX 4869</span></button>
+      <button class="hub-card" data-page="gadgets" type="button"><span class="hub-ic">🛠️</span><span class="hub-t">اختراعات أغاسا</span><span class="hub-d">أدوات كونان الشهيرة</span></button>
+      <button class="hub-card" data-page="glossary" type="button"><span class="hub-ic">📖</span><span class="hub-t">مصطلحات ومفاهيم</span><span class="hub-d">تعريفات سريعة لأهمّ المصطلحات</span></button>
+      <button class="hub-card" data-page="specials" type="button"><span class="hub-ic">✨</span><span class="hub-t">حلقات خاصة و OVA</span><span class="hub-d">الحلقات الخاصة والإصدارات المنزلية</span></button>
+      <button class="hub-card" data-page="manga" type="button"><span class="hub-ic">📚</span><span class="hub-t">المانغا</span><span class="hub-d">مجلّدات المانغا وفصولها</span></button>
+      <button class="hub-card" data-page="songs" type="button"><span class="hub-ic">🎵</span><span class="hub-t">الأغاني</span><span class="hub-d">شارات البداية والنهاية ومؤدّوها</span></button>
+    </div>
+   </div><!-- /#page-reference -->
+
+   <div id="page-movies" class="page sub-page" hidden>
+    <button class="back-btn" data-page="reference" type="button">‹ المرجع</button>
+    <h2 class="sub-title">🎬 الأفلام</h2>
+    <div id="movies-body"></div>
+   </div>
+
+   <div id="page-arcs" class="page sub-page" hidden>
+    <button class="back-btn" data-page="reference" type="button">‹ المرجع</button>
+    <h2 class="sub-title">🧩 الأقواس والقضايا</h2>
+    <div id="arcs-body"></div>
+   </div>
+
+   <div id="page-blackorg" class="page sub-page" hidden>
+    <button class="back-btn" data-page="reference" type="button">‹ المرجع</button>
+    <h2 class="sub-title">🕴️ المنظمة السوداء</h2>
+    <div id="blackorg-body"></div>
+   </div>
+
+   <div id="page-gadgets" class="page sub-page" hidden>
+    <button class="back-btn" data-page="reference" type="button">‹ المرجع</button>
+    <h2 class="sub-title">🛠️ اختراعات الدكتور أغاسا</h2>
+    <div id="gadgets-body"></div>
+   </div>
+
+   <div id="page-glossary" class="page sub-page" hidden>
+    <button class="back-btn" data-page="reference" type="button">‹ المرجع</button>
+    <h2 class="sub-title">📖 مصطلحات ومفاهيم</h2>
+    <div id="glossary-body"></div>
+   </div>
+
+   <div id="page-specials" class="page sub-page" hidden>
+    <button class="back-btn" data-page="reference" type="button">‹ المرجع</button>
+    <h2 class="sub-title">✨ حلقات خاصة و OVA</h2>
+    <div id="specials-body"></div>
+   </div>
+
+   <div id="page-manga" class="page sub-page" hidden>
+    <button class="back-btn" data-page="reference" type="button">‹ المرجع</button>
+    <h2 class="sub-title">📚 مجلّدات المانغا</h2>
+    <div id="manga-body"></div>
+   </div>
+
+   <div id="page-songs" class="page sub-page" hidden>
+    <button class="back-btn" data-page="reference" type="button">‹ المرجع</button>
+    <h2 class="sub-title">🎵 الأغاني</h2>
+    <div id="songs-body"></div>
+   </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>بياناتك محفوظة محليًا في متصفّحك فقط. عناوين الحلقات من ويكيبيديا العربية، والتصنيف والقصة من Detective Conan World.</p>
+  </footer>
+
+  <!-- toast for export/import feedback -->
+  <div id="toast" class="toast" hidden></div>
+
+  <!-- data (baked as globals so the app works from file://) then the app -->
+  <script src="data/episodes.js"></script>
+  <script src="data/movies.js"></script>
+  <script src="data/classify.js"></script>
+  <script src="data/timeline.js"></script>
+  <script src="data/characters.js"></script>
+  <script src="data/reference.js"></script>
+  <script src="data/lore.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

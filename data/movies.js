@@ -1,0 +1,35 @@
+// Detective Conan theatrical films, in watch order.
+// Titles (Arabic) + years from Arabic Wikipedia ("قائمة أفلام المحقق كونان").
+// `afterEpisode` = recommended viewing point on the anime timeline (per the user's guide).
+// The Lupin III crossover film is included at its chronological slot (after ep 721).
+window.DC_MOVIES = [
+  { id: "mv-1",  number: 1,  label: "الفيلم 1",  title: "العد التنازلي لناطحة السحاب",          year: 1997, afterEpisode: 54 },
+  { id: "mv-2",  number: 2,  label: "الفيلم 2",  title: "الهدف الرابع عشر",                      year: 1998, afterEpisode: 97 },
+  { id: "mv-3",  number: 3,  label: "الفيلم 3",  title: "الرجل اللغز",                           year: 1999, afterEpisode: 140 },
+  { id: "mv-4",  number: 4,  label: "الفيلم 4",  title: "الشاهدة الوحيدة",                       year: 2000, afterEpisode: 186 },
+  { id: "mv-5",  number: 5,  label: "الفيلم 5",  title: "العد التنازلي نحو المجهول",             year: 2001, afterEpisode: 231 },
+  { id: "mv-6",  number: 6,  label: "الفيلم 6",  title: "لغز شارع بيكر",                         year: 2002, afterEpisode: 275 },
+  { id: "mv-7",  number: 7,  label: "الفيلم 7",  title: "تقاطع طرق في العاصمة القديمة",          year: 2003, afterEpisode: 315 },
+  { id: "mv-8",  number: 8,  label: "الفيلم 8",  title: "مخادع السماء الفضية",                   year: 2004, afterEpisode: 356 },
+  { id: "mv-9",  number: 9,  label: "الفيلم 9",  title: "إستراتيجية فوق الأعماق",                year: 2005, afterEpisode: 396 },
+  { id: "mv-10", number: 10, label: "الفيلم 10", title: "لحن وداع المحققين",                     year: 2006, afterEpisode: 434 },
+  { id: "mv-11", number: 11, label: "الفيلم 11", title: "علم القراصنة في عرض المحيط",            year: 2007, afterEpisode: 470 },
+  { id: "mv-12", number: 12, label: "الفيلم 12", title: "لحن كامل من الرعب",                     year: 2008, afterEpisode: 504 },
+  { id: "mv-13", number: 13, label: "الفيلم 13", title: "المطارد الأسود",                        year: 2009, afterEpisode: 531 },
+  { id: "mv-14", number: 14, label: "الفيلم 14", title: "السفينة الضائعة في السماء",             year: 2010, afterEpisode: 570 },
+  { id: "mv-15", number: 15, label: "الفيلم 15", title: "15 دقيقة من الصمت",                     year: 2011, afterEpisode: 613 },
+  { id: "mv-16", number: 16, label: "الفيلم 16", title: "المهاجم الحادي عشر",                    year: 2012, afterEpisode: 651 },
+  { id: "mv-17", number: 17, label: "الفيلم 17", title: "عين خفية في البحر البعيد",              year: 2013, afterEpisode: 694 },
+  { id: "mv-lupin", number: null, label: "فيلم كروس أوفر", title: "لوبان الثالث ضد المحقق كونان", year: 2013, afterEpisode: 721, crossover: true },
+  { id: "mv-18", number: 18, label: "الفيلم 18", title: "قناص من بُعد آخر",                      year: 2014, afterEpisode: 735 },
+  { id: "mv-19", number: 19, label: "الفيلم 19", title: "بين أزهار الشمس والرماد",               year: 2015, afterEpisode: 779 },
+  { id: "mv-20", number: 20, label: "الفيلم 20", title: "أطياف ملونة",                           year: 2016, afterEpisode: 813 },
+  { id: "mv-21", number: 21, label: "الفيلم 21", title: "لغز الرسائل القرمزية",                  year: 2017, afterEpisode: 855 },
+  { id: "mv-22", number: 22, label: "الفيلم 22", title: "الجلاد زيرو",                           year: 2018, afterEpisode: 898 },
+  { id: "mv-23", number: 23, label: "الفيلم 23", title: "القبضة اللازوردية",                     year: 2019, afterEpisode: 938 },
+  { id: "mv-24", number: 24, label: "الفيلم 24", title: "الرصاصة القرمزية",                      year: 2021, afterEpisode: 974 },
+  { id: "mv-25", number: 25, label: "الفيلم 25", title: "عروس شيبويا",                           year: 2022, afterEpisode: 1040 },
+  { id: "mv-26", number: 26, label: "الفيلم 26", title: "الغواصة الحديدية السوداء",              year: 2023, afterEpisode: 1079 },
+  { id: "mv-27", number: 27, label: "الفيلم 27", title: "نجم المليون دولار",                     year: 2024, afterEpisode: 1122 },
+  { id: "mv-28", number: 28, label: "الفيلم 28", title: "ومضات من الماضي",                       year: 2025, afterEpisode: 1165 },
+];

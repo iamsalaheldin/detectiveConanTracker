@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html class="light" dir="rtl" lang="ar"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>تسلسل الأحداث - APTX-4861 TRACKER</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&amp;family=Bricolage+Grotesque:opsz,wght@12..96,800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#ffe16d",
+                        "surface-bright": "#f9f9f9",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#e9c400",
+                        "on-secondary-fixed-variant": "#930000",
+                        "on-surface": "#1a1c1c",
+                        "primary-container": "#003366",
+                        "background": "#f9f9f9",
+                        "error-container": "#ffdad6",
+                        "primary-fixed": "#d5e3ff",
+                        "on-secondary-fixed": "#410000",
+                        "secondary-container": "#e42214",
+                        "surface-tint": "#3a5f94",
+                        "surface-variant": "#e2e2e2",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-secondary-container": "#fffbff",
+                        "inverse-surface": "#2f3131",
+                        "on-tertiary-fixed-variant": "#544600",
+                        "inverse-primary": "#a7c8ff",
+                        "tertiary-container": "#c9a900",
+                        "on-primary-fixed-variant": "#1f477b",
+                        "surface": "#f9f9f9",
+                        "on-tertiary": "#ffffff",
+                        "inverse-on-surface": "#f1f1f1",
+                        "secondary-fixed": "#ffdad4",
+                        "on-primary-fixed": "#001b3c",
+                        "tertiary": "#705d00",
+                        "on-background": "#1a1c1c",
+                        "secondary": "#bc0000",
+                        "error": "#ba1a1a",
+                        "outline": "#737780",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#43474f",
+                        "surface-dim": "#dadada",
+                        "surface-container-high": "#e8e8e8",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f3f3f3",
+                        "surface-container": "#eeeeee",
+                        "on-tertiary-fixed": "#221b00",
+                        "secondary-fixed-dim": "#ffb4a8",
+                        "outline-variant": "#c3c6d1",
+                        "primary": "#001e40",
+                        "primary-fixed-dim": "#a7c8ff",
+                        "on-primary-container": "#799dd6",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-container": "#4c3e00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "margin-desktop": "40px",
+                        "gutter": "16px",
+                        "margin-mobile": "20px",
+                        "diagonal-offset": "12px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Bricolage Grotesque"],
+                        "body-md": ["Be Vietnam Pro"],
+                        "headline-xl": ["Bricolage Grotesque"],
+                        "label-md": ["JetBrains Mono"],
+                        "label-sm": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Bricolage Grotesque"],
+                        "body-lg": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "fontWeight": "800" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-xl": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "label-md": ["14px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "1.2", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "800" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Manga Brutalism specific styles */
+        .manga-shadow {
+            box-shadow: 6px 6px 0px 0px #1a1c1c;
+        }
+        .manga-halftone-bg {
+            background-image: radial-gradient(#1a1c1c 1px, transparent 1px);
+            background-size: 8px 8px;
+        }
+        .diagonal-stripes {
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                #1a1c1c 10px,
+                #1a1c1c 12px
+            );
+        }
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 24px;
+            bottom: 0;
+            width: 4px;
+            background-color: #1a1c1c;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md min-h-screen flex flex-col md:flex-row overflow-x-hidden selection:bg-tertiary-fixed selection:text-on-tertiary-fixed">
+<!-- TopAppBar (Mobile/Responsive Header) -->
+<header class="fixed top-0 bg-surface text-primary border-b-4 border-on-surface shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-row-reverse justify-between items-center w-full px-margin-mobile md:px-margin-desktop h-20 z-50">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-3xl font-bold" data-icon="account_circle">account_circle</span>
+</div>
+<div class="flex items-center">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg font-extrabold text-primary uppercase tracking-tighter">APTX-4861 TRACKER</h1>
+</div>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-2xl cursor-pointer hover:text-secondary transition-colors" data-icon="menu">menu</span>
+</div>
+</header>
+<!-- SideNavBar (Desktop Shell) -->
+<nav class="hidden md:flex bg-surface-container fixed top-0 right-0 h-screen w-64 border-l-4 border-on-surface flex flex-col pt-24 z-40 shadow-[-4px_0px_0px_0px_rgba(0,0,0,0.2)]">
+<!-- Header area within SideNav -->
+<div class="px-6 pb-8 border-b-4 border-on-surface mb-6 text-right flex flex-col items-start gap-4">
+<div class="w-16 h-16 bg-surface-variant border-2 border-on-surface rounded-full flex items-center justify-center overflow-hidden manga-shadow">
+<img alt="Detective Silhouette" class="w-full h-full object-cover opacity-80 mix-blend-multiply" data-alt="A graphic novel style silhouette of a detective wearing a trench coat and fedora, standing in a dimly lit alleyway. The scene is rendered in stark black and white with high contrast, typical of noir manga art. A single dramatic spotlight illuminates the figure from above, casting long shadows. The mood is mysterious and suspenseful." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDS4jdwj5AIjzg7pavGrlt8r3SZlobo1V4GkcUBGF-FFo1xRKBX2JlSYH0xG3Lk5L9_sqIiFhl-Rsl6COM3z4uPXIoFchvWtfO0qnBR1FaNPnJeuBWFnfhztwdbMsa3AfHtPMQBr1YGT3lFXHFp0AUomnQxxcN-96w-tXz88Audlt3Wz9vQZ8-IABoX5Cd7QRFue1apCS-DEYykoHpva0O1JLawgGLIoGYKbVDeB3N2kQHg860h88KYONBxDgh1CS_2_vRiN_d-zMyx"/>
+</div>
+<div>
+<h2 class="font-headline-lg text-headline-lg text-primary uppercase tracking-tight">Case File No. 4861</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase mt-1">Investigation in Progress</p>
+</div>
+<button class="w-full mt-4 bg-tertiary-fixed text-on-tertiary-fixed font-label-md text-label-md py-3 px-4 border-2 border-on-surface manga-shadow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all active:scale-95 uppercase flex justify-between items-center">
+<span>New Evidence</span>
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+<!-- Navigation Links -->
+<ul class="flex flex-col gap-2 px-4 flex-grow">
+<li>
+<a class="flex items-center gap-4 px-4 py-3 font-label-md text-label-md text-on-surface-variant hover:bg-tertiary-fixed hover:text-on-tertiary-fixed transition-colors active:scale-95 border-2 border-transparent hover:border-on-surface rounded-sm uppercase group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" data-icon="folder_open">folder_open</span>
+                    Tracker
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-4 px-4 py-3 font-label-md text-label-md text-on-surface-variant hover:bg-tertiary-fixed hover:text-on-tertiary-fixed transition-colors active:scale-95 border-2 border-transparent hover:border-on-surface rounded-sm uppercase group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" data-icon="query_stats">query_stats</span>
+                    Stats
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-4 px-4 py-3 font-label-md text-label-md text-on-surface-variant hover:bg-tertiary-fixed hover:text-on-tertiary-fixed transition-colors active:scale-95 border-2 border-transparent hover:border-on-surface rounded-sm uppercase group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" data-icon="groups">groups</span>
+                    Characters
+                </a>
+</li>
+<!-- Active Tab: Timeline -->
+<li>
+<a class="flex items-center gap-4 px-4 py-3 font-label-md text-label-md bg-secondary text-on-secondary border-2 border-on-surface shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:scale-95 transition-transform uppercase rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="history_toggle_off" data-weight="fill">history_toggle_off</span>
+                    Timeline
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-4 px-4 py-3 font-label-md text-label-md text-on-surface-variant hover:bg-tertiary-fixed hover:text-on-tertiary-fixed transition-colors active:scale-95 border-2 border-transparent hover:border-on-surface rounded-sm uppercase group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" data-icon="menu_book">menu_book</span>
+                    Reference
+                </a>
+</li>
+</ul>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 md:pr-64 pt-20 min-h-screen bg-surface-bright relative z-0">
+<!-- Background Halftone Accent -->
+<div class="absolute inset-0 manga-halftone-bg opacity-5 pointer-events-none z-[-1]"></div>
+<div class="max-w-4xl mx-auto p-margin-mobile md:p-margin-desktop">
+<!-- Page Header -->
+<div class="mb-12 relative">
+<h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tighter uppercase relative z-10 inline-block bg-tertiary-fixed px-4 py-2 border-[3px] border-on-surface manga-shadow transform -rotate-1">
+                    تسلسل الأحداث
+                </h1>
+<div class="h-4 w-full bg-secondary-container mt-4 border-y-[3px] border-on-surface diagonal-stripes transform -skew-x-12"></div>
+</div>
+<!-- Timeline Container -->
+<div class="relative timeline-line pt-8 pb-20 pr-4">
+<!-- Timeline Node 1: Distant Past -->
+<div class="relative flex items-start gap-8 mb-16 group">
+<!-- Marker -->
+<div class="absolute right-0 top-0 w-12 h-12 bg-primary-container border-[3px] border-on-surface rounded-full flex items-center justify-center z-10 manga-shadow group-hover:bg-secondary transition-colors">
+<span class="material-symbols-outlined text-on-primary-container group-hover:text-on-secondary font-bold" data-icon="business">business</span>
+</div>
+<!-- Content Card -->
+<div class="mr-16 flex-1 bg-surface border-[3px] border-on-surface p-6 manga-shadow relative bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiAvPgo8cmVjdCB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZTJlMmUyIiAvPgo8L3N2Zz4=')]">
+<!-- Tape decoration -->
+<div class="absolute -top-3 left-1/2 w-16 h-6 bg-surface-dim border-2 border-on-surface transform -rotate-3 opacity-80"></div>
+<div class="flex justify-between items-center mb-4 border-b-2 border-on-surface border-dashed pb-2">
+<span class="font-label-md text-label-md text-secondary tracking-widest uppercase bg-secondary-fixed px-2 py-1 border border-secondary">أكثر من 50 عاماً مضت</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">الملف: 001</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-primary mb-3">تأسيس مجموعة كاراسوما</h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                            البدايات الغامضة للمنظمة. تشير الأدلة إلى أن رينيا كاراسوما بدأ في جمع ثروته وتأسيس شبكة نفوذ سرية تمتد عبر الأوساط السياسية والمالية في اليابان.
+                        </p>
+</div>
+</div>
+<!-- Timeline Node 2: 18 Years Ago -->
+<div class="relative flex items-start gap-8 mb-16 group">
+<!-- Marker -->
+<div class="absolute right-0 top-0 w-12 h-12 bg-surface-tint border-[3px] border-on-surface rotate-45 flex items-center justify-center z-10 manga-shadow group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-on-primary -rotate-45" data-icon="science">science</span>
+</div>
+<!-- Content Card -->
+<div class="mr-16 flex-1 bg-surface-container-low border-[3px] border-on-surface p-0 manga-shadow relative overflow-hidden flex flex-col md:flex-row">
+<div class="p-6 flex-1 border-b-[3px] md:border-b-0 md:border-l-[3px] border-on-surface">
+<div class="flex justify-between items-center mb-4">
+<span class="font-label-md text-label-md text-primary bg-primary-fixed px-3 py-1 border-[2px] border-on-surface transform rotate-2">قبل 18 عاماً</span>
+</div>
+<h3 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-3">مشروع العقار السري</h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                                انضمام الزوجين ميانو (أتسوشي وإيلينا) إلى المنظمة للعمل على مشروع "الرصاصة الفضية" (Silver Bullet)، وهو النموذج الأولي للعقار الذي سيُعرف لاحقاً باسم APTX-4869.
+                            </p>
+</div>
+<!-- Evidence Image -->
+<div class="w-full md:w-48 h-48 md:h-auto bg-inverse-surface relative filter sepia-[.3]">
+<img alt="Chemical Flasks" class="w-full h-full object-cover mix-blend-luminosity opacity-80" data-alt="A vintage, slightly worn photograph pinned to a board, showing old glass chemistry flasks and beakers on a dark wooden laboratory table. The lighting is dim and clinical, creating a secretive, underground laboratory atmosphere. The color palette is muted with a slight sepia tint, evoking a sense of past events and hidden experiments." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAd72C2tvPl-k2DvLEkQvy8alZ7Bxoj--Afxkl9l2D3oyknzo5Dx9x8a5zYyXaqLCMinSfv2JnP_XumlJxIUvc7AwHjBFP6PFn-f8KhvNL7il3c0xWji50vZeseStGe8y_toKL26hN98SLmASq39B34S4_JMIwl4z1Q_QPtJu9q9uUI4P6C3Lc9FOhrNec67Z56YQu-lkhzJBDDRyFhWFjR_GOW_oQEWGX77pIRo3IZfau7BaOPkfL_ELgtjJWBh5J3iIRnQsGhmzzx"/>
+<div class="absolute inset-0 diagonal-stripes opacity-20 pointer-events-none"></div>
+</div>
+</div>
+</div>
+<!-- Timeline Node 3: 5 Years Ago -->
+<div class="relative flex items-start gap-8 mb-16 group">
+<!-- Marker -->
+<div class="absolute right-0 top-0 w-12 h-12 bg-secondary border-[3px] border-on-surface flex items-center justify-center z-10 shadow-[4px_4px_0px_0px_#ffe16d]">
+<span class="material-symbols-outlined text-on-secondary" data-icon="policy">policy</span>
+</div>
+<!-- Content Card -->
+<div class="mr-16 flex-1 bg-surface border-[3px] border-on-surface p-6 relative">
+<!-- Brutalist shadow pseudo element implemented via generic offset div -->
+<div class="absolute inset-0 bg-surface-dim transform translate-x-2 translate-y-2 border-[3px] border-on-surface z-[-1] manga-halftone-bg"></div>
+<div class="absolute top-2 left-2 flex gap-1">
+<div class="w-3 h-3 bg-secondary rounded-full border border-on-surface"></div>
+<div class="w-3 h-3 bg-primary rounded-full border border-on-surface"></div>
+</div>
+<div class="mb-4 inline-block">
+<span class="font-label-md text-label-md text-on-surface bg-tertiary-fixed px-3 py-1 border-[2px] border-on-surface shadow-[2px_2px_0px_0px_#1a1c1c]">قبل 5 سنوات</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-secondary mb-3">اختراق مكتب التحقيقات الفيدرالي</h3>
+<p class="font-body-lg text-body-lg text-on-surface font-bold mb-2">الاسم الرمزي: Rye (راي)</p>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                            نجاح عميل الـ FBI أكاي شويچي في التسلل إلى صفوف المنظمة السوداء، وبناء سمعة قوية أدت إلى حصوله على اسم رمزي. بداية سلسلة من المواجهات المعقدة بين الأجهزة الأمنية والمنظمة.
+                        </p>
+</div>
+</div>
+<!-- Timeline Node 4: Present Day -->
+<div class="relative flex items-start gap-8 mb-8 group">
+<!-- Marker -->
+<div class="absolute right-0 top-0 w-12 h-12 bg-tertiary-fixed border-[3px] border-on-surface rounded-sm flex items-center justify-center z-10 manga-shadow animate-pulse">
+<span class="material-symbols-outlined text-on-tertiary-fixed font-black" data-icon="crisis_alert">crisis_alert</span>
+</div>
+<!-- Content Card -->
+<div class="mr-16 flex-1 bg-error-container border-[3px] border-on-surface p-6 manga-shadow relative">
+<div class="flex justify-between items-center mb-4">
+<span class="font-label-md text-label-md text-on-error-container bg-error/20 px-3 py-1 border-[2px] border-error flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-error animate-ping"></span>
+                                الوقت الحاضر
+                            </span>
+</div>
+<h3 class="font-headline-xl text-headline-xl text-on-error-container mb-3 tracking-tighter">تقلص المحقق العظيم</h3>
+<div class="bg-surface/50 p-4 border-l-4 border-error mb-4">
+<p class="font-body-md text-body-md text-on-surface-variant italic">
+                                "جسد طفل، وعقل شخص بالغ..."
+                            </p>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                            إجبار كودو شينتشي على تناول عقار APTX-4869 التجريبي من قبل جين وفودكا في مدينة الملاهي. النتيجة غير المتوقعة كانت تقلص جسده، مما أدى إلى ولادة شخصية "إيدوجاوا كونان" وبدء مسار الأحداث الحالي.
+                        </p>
+</div>
+</div>
+<!-- End Marker -->
+<div class="absolute right-[22px] bottom-0 w-2 h-2 bg-on-surface rounded-full"></div>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:dcmsfansub.blogspot.com)",
+      "Bash(curl -s -L \"https://dcmsfansub.blogspot.com/p/blog-page_10.html\" -o /tmp/dc.html)",
+      "Read(//tmp/**)",
+      "Bash(cd /tmp; echo \"=== count img tags ===\"; grep -o \"<img\" dc.html | wc -l; echo \"=== count links to posts ===\"; grep -oE \"href=\\\\\"https://dcmsfansub.blogspot.com/[0-9]{4}/[0-9]{2}/[^\\\\\"]+\\\\\"\" dc.html | wc -l; echo \"=== sample post links ===\"; grep -oE \"href=\\\\\"https://dcmsfansub.blogspot.com/[0-9]{4}/[0-9]{2}/[^\\\\\"]+\\\\\"\" dc.html | head -20; echo \"=== context around الحلقة ===\"; grep -oE \".{40}الحلقة.{40}\" dc.html | head -12)",
+      "Bash(grep -oE \"alt=\\\\\"[^\\\\\"]{3,}\\\\\"\" dc.html)",
+      "Bash(curl -s \"https://dcmsfansub.blogspot.com/feeds/posts/summary?max-results=3&alt=json\" -o feed.json)",
+      "WebFetch(domain:ar.wikipedia.org)",
+      "Bash(curl -s \"https://ar.wikipedia.org/w/api.php?action=parse&page=%D9%82%D8%A7%D8%A6%D9%85%D8%A9_%D8%AD%D9%84%D9%82%D8%A7%D8%AA_%D8%A7%D9%84%D9%85%D8%AD%D9%82%D9%82_%D9%83%D9%88%D9%86%D8%A7%D9%86&prop=links&format=json\" -o links.json)",
+      "Bash(node -e \"const d=require\\('/tmp/links.json'\\); const L=d.parse.links.map\\(x=>x['*']\\).filter\\(t=>/الموسم/.test\\(t\\)\\); console.log\\('season links:',L.length\\); L.slice\\(0,40\\).forEach\\(t=>console.log\\(t\\)\\);\")",
+      "Bash(node -e ' *)",
+      "Bash(node scripts/scrape.mjs)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(node scripts/classify.mjs)",
+      "WebFetch(domain:www.detectiveconanworld.com)",
+      "Bash(node scripts/lore.mjs)",
+      "Bash(git config *)",
+      "Bash(git add *)"
+    ]
+  }
+}
