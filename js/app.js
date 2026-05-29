@@ -248,18 +248,45 @@
     );
   }
 
+  /* ------------------------------------------------ collapsible seasons */
+  var COLLAPSE_KEY = "dc-collapsed-v1";
+  var collapsedSeasons = loadCollapsed();
+  function loadCollapsed() {
+    try {
+      var raw = localStorage.getItem(COLLAPSE_KEY);
+      if (raw) return new Set(JSON.parse(raw));
+    } catch (e) {}
+    // default: every season collapsed for a compact, scrollable landing
+    return new Set(SEASONS.map(function (s) { return s.season; }));
+  }
+  function saveCollapsed() {
+    try { localStorage.setItem(COLLAPSE_KEY, JSON.stringify([...collapsedSeasons])); } catch (e) {}
+  }
+  function filtersActive() {
+    return !!(filters.q || filters.favOnly || filters.canonOnly ||
+      filters.status !== "all" || filters.type !== "all" || filters.kind !== "all" ||
+      filters.season !== "all" || filters.tag !== "all");
+  }
+
   function render() {
     var visible = TIMELINE.filter(passesFilter);
+    var active = filtersActive(); // when searching/filtering, show everything expanded
     var html = [];
-    var lastSeason = null;
+    var curSeason = null, groupOpen = false;
     for (var i = 0; i < visible.length; i++) {
       var item = visible[i];
-      if (item.type === "episode" && item.season !== lastSeason) {
-        lastSeason = item.season;
-        html.push(seasonHeaderHtml(item.season));
+      if (item.type === "episode" && item.season !== curSeason) {
+        if (groupOpen) html.push("</div></section>");
+        curSeason = item.season;
+        var collapsed = !active && collapsedSeasons.has(curSeason);
+        html.push('<section class="season-group' + (collapsed ? " collapsed" : "") + '" data-season="' + curSeason + '">');
+        html.push(seasonHeaderHtml(curSeason));
+        html.push('<div class="season-body">');
+        groupOpen = true;
       }
       html.push(cardHtml(item));
     }
+    if (groupOpen) html.push("</div></section>");
     timelineEl.innerHTML = html.join("");
     emptyEl.hidden = visible.length !== 0;
     $("#result-count").textContent =
@@ -274,11 +301,12 @@
     }).length;
     var pct = info.total ? Math.round((watched / info.total) * 100) : 0;
     return (
-      '<div class="season-header" id="season-' + season + '">' +
+      '<button class="season-header" id="season-' + season + '" type="button" aria-label="طيّ/توسيع الموسم ' + season + '">' +
+        '<span class="season-chevron" aria-hidden="true">▾</span>' +
         '<span class="season-badge">الموسم ' + season + "</span>" +
         '<span class="season-count">' + watched + " / " + info.total + "</span>" +
         '<span class="season-mini"><span style="width:' + pct + '%"></span></span>' +
-      "</div>"
+      "</button>"
     );
   }
 
@@ -307,6 +335,16 @@
   /* ------------------------------------------------------------ events */
   // event delegation on the timeline
   timelineEl.addEventListener("click", function (e) {
+    var sh = e.target.closest(".season-header");
+    if (sh) {
+      var group = sh.closest(".season-group");
+      var n = +group.dataset.season;
+      var nowCollapsed = group.classList.toggle("collapsed");
+      if (nowCollapsed) collapsedSeasons.add(n); else collapsedSeasons.delete(n);
+      saveCollapsed();
+      return;
+    }
+
     var toggle = e.target.closest(".watch-toggle");
     if (toggle) { toggleWatched(toggle.dataset.id); return; }
 
@@ -448,6 +486,13 @@
     if (!timelineEl.querySelector(sel)) { resetFilters(); render(); }
     var card = timelineEl.querySelector(sel);
     if (!card) return;
+    // if the card is inside a collapsed season, expand it first
+    var group = card.closest(".season-group.collapsed");
+    if (group) {
+      group.classList.remove("collapsed");
+      collapsedSeasons.delete(+group.dataset.season);
+      saveCollapsed();
+    }
     card.scrollIntoView({ block: "center" });
     card.classList.remove("flash"); void card.offsetWidth; card.classList.add("flash");
   }
@@ -474,6 +519,18 @@
       btn.setAttribute("aria-pressed", String(on));
       render();
     });
+  });
+
+  // collapse-all / expand-all seasons
+  var collapseAllBtn = $("#btn-collapse-all");
+  if (collapseAllBtn) collapseAllBtn.addEventListener("click", function () {
+    collapsedSeasons = new Set(SEASONS.map(function (s) { return s.season; }));
+    saveCollapsed(); render(); window.scrollTo(0, 0);
+  });
+  var expandAllBtn = $("#btn-expand-all");
+  if (expandAllBtn) expandAllBtn.addEventListener("click", function () {
+    collapsedSeasons = new Set();
+    saveCollapsed(); render();
   });
 
   /* --------------------------------------------------- export / import */

@@ -51,6 +51,13 @@
 
   <main class="container">
    <div id="page-tracker" class="page">
+    <!-- header banner -->
+    <section class="hero-banner" aria-label="المحقق كونان">
+      <div class="hero-banner-overlay">
+        <h2 class="hero-banner-title">المحقق كونان</h2>
+        <p class="hero-banner-sub">سجلّ مشاهدة الحلقات والأفلام · إنّ الحقيقة دائمًا واحدة</p>
+      </div>
+    </section>
     <!-- overall progress -->
     <section class="progress-panel panel" aria-label="ملخص التقدّم">
       <div class="progress-head">
@@ -107,6 +114,9 @@
       <button id="btn-random" class="btn quick-action" type="button" title="اختر عنصرًا عشوائيًا من النتائج الحالية">🎲 عشوائية</button>
       <button class="btn btn-ghost quick-toggle" data-toggle="favOnly" type="button" aria-pressed="false" title="عرض المفضّلة فقط">⭐ المفضّلة</button>
       <button class="btn btn-ghost quick-toggle" data-toggle="canonOnly" type="button" aria-pressed="false" title="إخفاء حلقات الحشو">📖 مسار القصة</button>
+      <span class="quick-sep" aria-hidden="true"></span>
+      <button id="btn-collapse-all" class="btn btn-ghost" type="button" title="طيّ كل المواسم">⊟ طيّ الكل</button>
+      <button id="btn-expand-all" class="btn btn-ghost" type="button" title="توسيع كل المواسم">⊞ توسيع الكل</button>
     </div>
 
     <p class="result-count" id="result-count" aria-live="polite"></p>
