@@ -1,125 +1,155 @@
-# متتبّع مشاهدة المحقق كونان 🔎
+# Detective Conan Watch Tracker 🔎
 
-تطبيق ويب (عربي، RTL، بأسلوب المانغا/الأنمي) لتتبّع مشاهدتك لـ **حلقات وأفلام المحقق كونان**
-بترتيبها الزمني الصحيح، مع صفحات إضافية عن القصة والشخصيات وتسلسل الأحداث.
+A personal web app (Arabic, RTL, manga/anime "case file" style) for tracking which
+**Detective Conan episodes and movies** you've watched — in correct chronological order, with
+movies slotted into the timeline at their recommended viewing points. It also bundles reference
+pages about the story, characters, chronology, and more.
 
-- **بدون خطوة بناء**: افتح `index.html` بالنقر المزدوج ويعمل مباشرةً من `file://`.
-- البيانات مُضمّنة كملفات JavaScript (متغيّرات عامة)، وتقدّمك يُحفظ محليًا عبر `localStorage`.
-- **1203 حلقة** + **29 فيلمًا** (28 فيلمًا + فيلم الكروس أوفر «لوبان الثالث ضد المحقق كونان»).
-
----
-
-## كيفية الاستخدام
-
-1. افتح **`index.html`** في المتصفح (نقر مزدوج، أو شغّل خادمًا ثابتًا بسيطًا).
-2. تنقّل بين الصفحات من **شريط التبويب** أعلى الصفحة.
-3. تقدّمك يُحفظ تلقائيًا في متصفّحك. لأخذ نسخة احتياطية أو نقله بين الأجهزة استخدم زرّي
-   **تصدير / استيراد** (ملف JSON).
-
-> ملاحظة: الخطوط (Google Fonts) وصور الشخصيات تتطلّب اتصال إنترنت عند أوّل تحميل؛ ويوجد بديل
-> محلّي للخطوط، وتظهر الأحرف الأولى بدل صور الشخصيات عند تعذّر تحميلها.
+- **No build step.** Open `index.html` directly (double-click) — it runs straight from `file://`.
+- Data is baked into plain JS files (global variables); your progress is saved in `localStorage`.
+- **1203 episodes** + **29 movies** (28 numbered films + the Lupin III crossover).
 
 ---
 
-## الصفحات
+## Getting started
 
-يتضمّن التطبيق أربع صفحات، ولكلٍّ منها رابط مباشر عبر الـ hash:
+1. Open **`index.html`** in a browser (double-click, or serve the folder with any static server).
+2. Use the right-hand **CASE FILE** sidebar to move between pages (a top bar collapses it to a
+   horizontal nav on narrow screens).
+3. Your progress saves automatically. Use **Export / Import** (top bar) to back it up or move it
+   between browsers/devices.
 
-### 🔎 الحلقات والأفلام — `#tracker`
-الصفحة الرئيسية: قائمة زمنية موحّدة تدمج كل الحلقات والأفلام، حيث يظهر كل فيلم في مكانه
-الموصى به بين الحلقات (مثل: الفيلم 1 بعد الحلقة 54، الكروس أوفر بعد الحلقة 721).
+> Online note: Google Fonts, character images, and movie posters load from the web on first use.
+> There are graceful fallbacks (system fonts; character initials; a number chip when a poster is
+> missing), so the app stays usable offline.
 
-- 🖼️ **ترويسة (بانر)** أعلى الصفحة، ومواسم **قابلة للطيّ** (افتراضيًا مطويّة) مع أزرار
-  «طيّ الكل / توسيع الكل» لتصفّح أسهل للقائمة الطويلة؛ تُحفظ حالة الطيّ محليًا.
-- ✅ **تتبّع المشاهدة**: انقر زر الحالة لتبديل «مُشاهَد»، مع شريط تقدّم عام وتقدّم لكل موسم.
-- 🔍 **بحث وفلاتر**: بحث بالاسم أو الرقم، وفلاتر حسب (مُشاهَد/غير مُشاهَد · حلقات/أفلام ·
-  قصة أصلية/حشو · الموسم).
-- 🏷️ **الأقواس والعناصر**: شارات ملوّنة وفلتر مخصّص (المنظمة السوداء، الإف بي آي، كيد اللص،
-  رومانسية، ماضي الشخصيات، تطوّر الشخصيات، شخصية جديدة، فريق المحققين الصغار).
-- 🔢 **ترقيم مزدوج**: يظهر الرقم الياباني والرقم الدولي معًا لكل حلقة.
-- ⭐ **تقييم وملاحظات**: تقييم من 5 نجوم وحقل ملاحظات لكل حلقة أو فيلم (انقر البطاقة لتوسعتها).
-- 💾 **نسخ احتياطي**: تصدير/استيراد كل تقدّمك كملف JSON.
-- ⚡ **أدوات سريعة**:
-  - **▶ أكمل المشاهدة**: ينقلك إلى أوّل حلقة/عنصر غير مُشاهَد ويُبرزه.
-  - **🎲 عشوائية**: يختار عنصرًا عشوائيًا من النتائج الظاهرة حاليًا.
-  - **⭐ المفضّلة**: أضف أي عنصر إلى المفضّلة (نجمة على البطاقة) وفلتر لعرضها فقط.
-  - **📖 مسار القصة**: يُخفي حلقات الحشو ويُبقي القصة الأصلية والأفلام لمتابعة الأحداث المهمّة فقط.
+---
 
-### 📊 إحصائياتي — `#stats`
-لوحة تقدّم شاملة: نسبة الإنجاز الكلية، الحلقات/الأفلام المشاهَدة، عدد المفضّلة، متوسّط تقييمك،
-والوقت المتبقّي التقديري؛ إضافةً إلى أشرطة الإنجاز (قصة/حشو، حسب القوس، حسب الموسم)،
-توزيع تقييماتك، و**سجلّ المشاهدة الأخير** مؤرّخًا (انقر أي عنصر للانتقال إليه).
+## Pages
 
-### 📖 القصة — `#story`
-نظرة عامة على حبكة المسلسل: فكرة التحوّل، المنظمة السوداء وعقّار APTX 4869، بطاقات
-الشخصيات الرئيسية، وحقائق أساسية (المؤلّف، سنوات البداية، عدد المجلّدات والحلقات).
+The app has six top-level tabs, each with a hash deep-link (e.g. `index.html#stats`).
 
-### 👤 الشخصيات — `#characters`
-**37 شخصية** موزّعة على 7 مجموعات (الأبطال، فريق المحققين الصغار، العائلة والأصدقاء،
-الشرطة، الإف بي آي والاستخبارات، المنظمة السوداء، ماجيك كايتو)، مع **صورة** ونبذة لكل شخصية.
-مجموعة المنظمة السوداء بتنسيق أحمر مميّز.
+### 🔎 Episodes & Movies — `#tracker`
+The home page: a single timeline merging every episode and movie, with each film placed right after
+its anchor episode (Movie 1 after ep 54, the Lupin crossover after ep 721, etc.).
 
-### 🕰️ تسلسل الأحداث — `#chrono`
-خطّ زمنيّ داخليّ لأحداث القصة (30 حدثًا في 4 حِقب) من الماضي البعيد حتى الحاضر، مع توضيح
-أنّ السلسلة تعتمد «زمنًا عائمًا».
+- **Header banner** at the top, and **collapsible seasons** (collapsed by default) with
+  *Collapse all / Expand all* buttons for easy scrolling. Collapse state is saved.
+- **Watch tracking**: toggle "watched" per item, with an overall progress meter and per-season
+  progress. Watch dates are recorded.
+- **Search & filters**: by title/number, plus watched status, episodes/movies, canon/filler, and
+  a season jump.
+- **Arcs & elements filter** (`الأقواس والعناصر`): **multi-select** chips — Black Organization, FBI,
+  Kaitou Kid, romance, characters' pasts, character development, new character, Detective Boys.
+  Episodes matching *any* selected tag are shown; these also appear as colored pills on each card.
+- **Dual numbering**: Japanese broadcast number + international number on every episode.
+- **Ratings & notes**: 5-star rating and a notes field per item (click a card to expand).
+- **Quick actions**: ▶ Continue (jump to first unwatched), 🎲 Random, ⭐ Favorites-only,
+  📖 Story path (hide filler, keep canon + movies).
+- **Movie posters** on movie cards, and a JSON **Export / Import** backup.
 
-### 📚 المرجع — `#reference`
-صفحة مركزية تفتح ثماني صفحات فرعية (لكلٍّ رابط hash خاص):
+### 📊 My Stats — `#stats`
+A progress dashboard: overall %, episodes/movies watched, favorites count, average rating, and an
+estimated time remaining; plus progress bars (canon vs. filler, per-arc, per-season), a ratings
+distribution, and a dated **watch history** (click an entry to jump to it).
 
-| الصفحة | الـ hash | المحتوى |
+### 📖 Story — `#story`
+Plot overview: the premise, the Black Organization and APTX 4869, main-character cards, and key
+facts (creator, start years, volume/episode counts), with a Conan hero image.
+
+### 👤 Characters — `#characters`
+37 characters across 7 groups (Protagonists, Detective Boys, Family & Friends, Police, FBI/Intel,
+Black Organization, Magic Kaito), each with a portrait and short description. The Black Organization
+group is styled distinctly.
+
+### 🕰️ Event Chronology — `#chrono`
+An in-universe timeline of ~30 story events across 4 eras, from the distant past to the present
+(notes the series' "floating timeline").
+
+### 📚 Reference — `#reference`
+A hub linking to eight sub-pages (each with its own hash):
+
+| Sub-page | Hash | Contents |
 |---|---|---|
-| 🎬 الأفلام | `#movies` | الأفلام الـ29 بترتيبها على الخط الزمني (انقر للانتقال إلى الفيلم في القائمة). |
-| 🧩 الأقواس والقضايا | `#arcs` | أبرز الأقواس القصصية وحلقاتها البارزة. |
-| 🕴️ المنظمة السوداء | `#blackorg` | الأعضاء والأسماء الحركية وشرح عقّار APTX 4869. |
-| 🛠️ اختراعات أغاسا | `#gadgets` | أدوات كونان الشهيرة. |
-| 📖 مصطلحات ومفاهيم | `#glossary` | تعريفات سريعة لأهمّ المصطلحات. |
-| ✨ حلقات خاصة و OVA | `#specials` | الحلقات الخاصة وإصدارات الـOVA. |
-| 📚 المانغا | `#manga` | مجلّدات المانغا (109) وفصولها وتواريخ صدورها. |
-| 🎵 الأغاني | `#songs` | شارات البداية/النهاية/الأفلام — العناوين والمؤدّون فقط. |
+| 🎬 Movies | `#movies` | All 29 films with posters; click one to jump to it on the tracker. |
+| 🧩 Story arcs | `#arcs` | Major arcs and their landmark episodes. |
+| 🕴️ Black Organization | `#blackorg` | Members and codenames + an APTX 4869 explainer. |
+| 🛠️ Agasa's gadgets | `#gadgets` | Conan's signature gadgets. |
+| 📖 Glossary | `#glossary` | Quick definitions of key terms. |
+| ✨ Specials & OVA | `#specials` | TV specials and OVA releases. |
+| 📚 Manga | `#manga` | Manga volumes, chapters, and release dates. |
+| 🎵 Songs | `#songs` | Opening/ending/movie themes — titles and performer credits only. |
 
 ---
 
-## مصادر البيانات وتحديثها
+## Customizing images
 
-كل البيانات النصّية مُولَّدة عبر سكربتات Node (تتطلّب **Node.js 18+**، تستخدم `fetch` المدمج
-دون أي حزم خارجية). السكربتات مستقلّة وتُدمج في المتصفّح، فيمكن تشغيل أيٍّ منها بأي ترتيب.
+Drop your own images into `assets/img/` to override the defaults (the app uses them if present,
+otherwise it falls back to a gradient / Detective Conan World artwork):
 
-| البيانات | المصدر | السكربت | الناتج |
+| File | Where it appears |
+|---|---|
+| `header.jpg` (or `.png`) | The banner atop the Episodes & Movies page |
+| `conan-logo.png` | Portrait in the CASE FILE sidebar |
+| `conan-hero.png` | Hero image on the Story page |
+
+Movie posters and character portraits are hotlinked from Detective Conan World and need no local
+files.
+
+---
+
+## Data sources & regeneration
+
+All textual data is generated by Node scripts (**Node.js 18+**, built-in `fetch`, no dependencies).
+The scripts are independent and merged in the browser, so they can be run in any order.
+
+| Data | Source | Script | Output |
 |---|---|---|---|
-| عناوين الحلقات، تاريخ العرض | ويكيبيديا العربية (`قائمة حلقات المحقق كونان`) | `node scripts/scrape.mjs` | `data/episodes.js` |
-| التصنيف (قصة/حشو)، الأقواس، الرقم الدولي، عنوان إنجليزي احتياطي | Detective Conan World (`/wiki/Anime`) | `node scripts/classify.mjs` | `data/classify.js` |
-| الأفلام (العناوين، السنوات، نقطة المشاهدة) | يدويًا | — | `data/movies.js` |
-| الأغاني، المانغا، الـOVA، الحلقات الخاصة | Detective Conan World (`/wiki/Music`, `/wiki/Manga`, `/wiki/OVAs`, `/wiki/TV_Specials`) | `node scripts/lore.mjs` | `data/lore.js` |
-| الأقواس، المنظمة السوداء، الاختراعات، المصطلحات | معرفة عامة (مُقتبسة) | يدويًا | `data/reference.js` |
-| القصة، الشخصيات، تسلسل الأحداث | Detective Conan World | يدويًا (مُقتبسة) | `data/{characters,timeline}.js` + `index.html` |
+| Episode titles, air dates | Arabic Wikipedia (`قائمة حلقات المحقق كونان`) | `node scripts/scrape.mjs` | `data/episodes.js` |
+| Classification (canon/filler), arc tags, international number, English fallback title | Detective Conan World (`/wiki/Anime`) | `node scripts/classify.mjs` | `data/classify.js` |
+| Songs, manga volumes, OVAs, specials | Detective Conan World (`/wiki/Music`, `/wiki/Manga`, `/wiki/OVAs`, `/wiki/TV_Specials`) | `node scripts/lore.mjs` | `data/lore.js` |
+| Movies (titles, years, viewing points) | manual | — | `data/movies.js` |
+| Arcs, Black Organization, gadgets, glossary | hand-authored (adapted) | — | `data/reference.js` |
+| Story, characters, chronology | Detective Conan World (adapted) | — | `data/{characters,timeline}.js` + `index.html` |
 
-> الحلقات التي يعرفها مصدر التصنيف ولا تتوفّر لها ترجمة عربية بعد (الأحدث) تظهر تلقائيًا
-> بعنوانها الإنجليزي مؤقّتًا حتى يتزامن المصدران.
-
----
-
-## البنية
-
-```
-index.html            هيكل الصفحة (RTL) وكل الصفحات الأربع
-css/styles.css        تصميم المانغا (أحمر/أزرق، هاف‌تون، بطاقات ملف القضية)
-js/app.js             الدمج الزمني، الحالة، الفلاتر، الحفظ، التنقّل، عرض الصفحات
-data/episodes.js      عناوين الحلقات                 (مُولَّد — ويكيبيديا)
-data/classify.js      التصنيف + الأقواس + الرقم الدولي (مُولَّد — DCW)
-data/movies.js        بيانات الأفلام                 (يدوي)
-data/characters.js    بيانات الشخصيات + روابط الصور    (يدوي — DCW)
-data/timeline.js      تسلسل الأحداث الزمني            (يدوي — DCW)
-data/reference.js     الأقواس + المنظمة + الاختراعات + المصطلحات (يدوي)
-data/lore.js          الأغاني + المانغا + OVA + الخاصة  (مُولَّد — DCW)
-scripts/scrape.mjs    جلب عناوين الحلقات من ويكيبيديا العربية
-scripts/classify.mjs  جلب التصنيف والأقواس من Detective Conan World
-scripts/lore.mjs      جلب الأغاني والمانغا والـOVA من Detective Conan World
-```
+> Episodes that the classification source knows but the Arabic title source hasn't translated yet
+> (the newest ones) appear automatically with their English title until the two sources sync.
 
 ---
 
-## ملاحظات
+## Design
 
-- البيانات والصور النصّية مقتبسة من **ويكيبيديا العربية** و**موسوعة Detective Conan World**
-  لأغراض شخصية؛ صور الشخصيات مرتبطة من مصدرها (دون نسخها).
-- تقدّمك خاصٌّ بمتصفّحك (`localStorage`)؛ لا يُرسل لأي خادم. استخدم التصدير/الاستيراد للنقل.
+The UI follows a **manga-brutalism "Case File"** system (adapted from a Google Stitch redesign in
+`stitch_case_closed_chronicles/`): a navy / action-red / caution-yellow palette, manila case-file
+cards, 0-radius sharp corners, heavy ink borders, halftone-dot backgrounds, hard offset shadows,
+Tajawal-heavy Arabic headlines, and JetBrains Mono for forensic metadata. Fully RTL and responsive.
+
+---
+
+## Project structure
+
+```
+index.html            App shell (RTL): top bar + CASE FILE sidebar + all pages
+css/styles.css        Manga "case file" theme
+js/app.js             Timeline merge, state, filters, persistence, navigation, page rendering
+data/episodes.js      Episode titles                         (generated — Wikipedia)
+data/classify.js      Classification + arc tags + intl number (generated — DCW)
+data/movies.js        Movie data                             (manual)
+data/characters.js    Character data + portrait links        (manual — DCW)
+data/timeline.js      Event chronology                       (manual — DCW)
+data/reference.js     Arcs + Black Org + gadgets + glossary  (manual)
+data/lore.js          Songs + manga + OVA + specials          (generated — DCW)
+assets/img/           Your override images (header, conan-logo, conan-hero)
+scripts/scrape.mjs    Fetch episode titles from Arabic Wikipedia
+scripts/classify.mjs  Fetch classification/arcs from Detective Conan World
+scripts/lore.mjs      Fetch songs/manga/OVA/specials from Detective Conan World
+```
+
+---
+
+## Notes
+
+- Text and imagery are adapted/linked from **Arabic Wikipedia** and **Detective Conan World** for
+  personal use; character portraits and movie posters are linked from their source (not copied).
+- Your progress lives only in your browser (`localStorage`) and is never sent anywhere — use
+  Export/Import to move it.
